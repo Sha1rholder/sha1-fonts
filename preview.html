@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#111614">
+	<title>Sha1 fonts showcase</title>
+	<style>
+		@font-face {
+			font-family: "Noto Sans";
+			src: url("Noto/Noto_Sans/NotoSans-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Noto Sans";
+			src: url("Noto/Noto_Sans/NotoSans-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Noto Sans Mono";
+			src: url("Noto/Noto_Sans_Mono/NotoSansMono-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Noto Serif";
+			src: url("Noto/Noto_Serif/NotoSerif-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Noto Serif";
+			src: url("Noto/Noto_Serif/NotoSerif-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Noto Sans SC";
+			src: url("Noto/Noto_Sans_SC/NotoSansSC-VariableFont_wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+		}
+
+		@font-face {
+			font-family: "Noto Serif SC";
+			src: url("Noto/Noto_Serif_SC/NotoSerifSC-VariableFont_wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 200 900;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans";
+			src: url("Sha1/complete/Sha1Sans-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans";
+			src: url("Sha1/complete/Sha1Sans-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans Mono";
+			src: url("Sha1/complete/Sha1SansMono-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif";
+			src: url("Sha1/complete/Sha1Serif-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif";
+			src: url("Sha1/complete/Sha1Serif-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		/* 完整斜体不含中文，使用完整直立字体承接回退 */
+		@font-face {
+			font-family: "Sha1 Sans Upright";
+			src: url("Sha1/complete/Sha1Sans-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif Upright";
+			src: url("Sha1/complete/Sha1Serif-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans Patch";
+			src: url("Sha1/patch/Sha1SansPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans Patch";
+			src: url("Sha1/patch/Sha1SansPatch-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans Mono Patch";
+			src: url("Sha1/patch/Sha1SansMonoPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif Patch";
+			src: url("Sha1/patch/Sha1SerifPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif Patch";
+			src: url("Sha1/patch/Sha1SerifPatch-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: italic;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		/* 独立直立回退让缺少原生斜体的补丁仍可按开关合成倾斜 */
+		@font-face {
+			font-family: "Sha1 Sans Patch Upright";
+			src: url("Sha1/patch/Sha1SansPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Sans Mono Patch Upright";
+			src: url("Sha1/patch/Sha1SansMonoPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 100 900;
+			font-stretch: 62.5% 100%;
+		}
+
+		@font-face {
+			font-family: "Sha1 Serif Patch Upright";
+			src: url("Sha1/patch/Sha1SerifPatch-VariableFont_wdth,wght.ttf") format("truetype");
+			font-style: normal;
+			font-weight: 200 900;
+			font-stretch: 62.5% 100%;
+		}
+
+
+		.sample {
+			overflow-x: auto;
+			padding: 18px 18px 20px;
+			font-size: clamp(15px, 1.8vw, 24px);
+			font-weight: var(--sample-font-weight, 400);
+			font-stretch: 100%;
+			line-height: 1.45;
+			white-space: normal;
+			overflow-wrap: anywhere;
+			font-synthesis: none;
+
+		}
+
+		.sans {
+			font-family: "Sha1 Sans Patch", "Sha1 Sans Patch Upright", "Noto Sans", "Noto Sans SC", "Noto Sans CJK SC";
+		}
+
+		.mono {
+			font-family: "Sha1 Sans Mono Patch", "Sha1 Sans Mono Patch Upright", "Noto Sans Mono", "Noto Sans SC", "Noto Sans CJK SC";
+		}
+
+		.serif {
+			font-family: "Sha1 Serif Patch", "Sha1 Serif Patch Upright", "Noto Serif", "Noto Serif SC", "Noto Serif CJK SC";
+		}
+
+		.complete-sans {
+			font-family: "Sha1 Sans", "Sha1 Sans Upright";
+		}
+
+		.complete-mono {
+			font-family: "Sha1 Sans Mono";
+		}
+
+		.complete-serif {
+			font-family: "Sha1 Serif", "Sha1 Serif Upright";
+		}
+
+		.noto-sans {
+			font-family: "Noto Sans", "Noto Sans SC", "Noto Sans CJK SC";
+		}
+
+		.noto-mono {
+			font-family: "Noto Sans Mono", "Noto Sans SC", "Noto Sans CJK SC";
+		}
+
+		.noto-serif {
+			font-family: "Noto Serif", "Noto Serif SC", "Noto Serif CJK SC";
+		}
+	</style>
+	<link rel="stylesheet" href="preview.css">
+</head>
+
+<body>
+	<main>
+		<header>
+			<div class="header-row">
+				<h1>Sha1 fonts</h1>
+				<div class="header-controls">
+					<label class="weight-control" for="font-weight">
+						<span>Font weight</span>
+						<input id="font-weight" type="range" min="100" max="900" step="1" value="400">
+						<output id="font-weight-value" for="font-weight">400</output>
+					</label>
+					<label class="toggle">
+						<input id="show-noto" type="checkbox">
+						<span class="toggle-track" aria-hidden="true"></span>
+						<span>Show Noto samples</span>
+					</label>
+					<label class="toggle">
+						<input id="disable-font-synthesis" type="checkbox" checked>
+						<span class="toggle-track" aria-hidden="true"></span>
+						<span>Disable font synthesis</span>
+					</label>
+					<label class="toggle">
+						<input id="fixed-font-variation-settings" type="checkbox" checked>
+						<span class="toggle-track" aria-hidden="true"></span>
+						<span>Fix font variation settings</span>
+					</label>
+				</div>
+			</div>
+		</header>
+
+		<section class="font-group" aria-labelledby="patch-heading">
+			<header class="group-header">
+				<h2 id="patch-heading">Sha1 Patch + pre-defined Noto fallback</h2>
+			</header>
+			<div class="grid">
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Sans Patch</h3>
+						<span class="meta">Noto Sans + Noto Sans SC</span>
+					</div>
+					<div class="sample sans"></div>
+				</section>
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Sans Mono Patch</h3>
+						<span class="meta">Noto Sans Mono + Noto Sans SC</span>
+					</div>
+					<div class="sample mono"></div>
+				</section>
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Serif Patch</h3>
+						<span class="meta">Noto Serif + Noto Serif SC</span>
+					</div>
+					<div class="sample serif" id="sha1-serif-sample"></div>
+				</section>
+			</div>
+		</section>
+
+		<section class="font-group" aria-labelledby="complete-heading">
+			<header class="group-header">
+				<h2 id="complete-heading">Complete Sha1 fonts</h2>
+			</header>
+			<div class="grid">
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Sans</h3>
+						<span class="meta">Complete font</span>
+					</div>
+					<div class="sample complete-sans"></div>
+				</section>
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Sans Mono</h3>
+						<span class="meta">Complete font</span>
+					</div>
+					<div class="sample complete-mono"></div>
+				</section>
+				<section class="card">
+					<div class="card-header">
+						<h3>Sha1 Serif</h3>
+						<span class="meta">Complete font</span>
+					</div>
+					<div class="sample complete-serif"></div>
+				</section>
+			</div>
+		</section>
+
+		<section class="font-group" id="noto-samples" aria-labelledby="noto-heading" hidden>
+			<header class="group-header">
+				<h2 id="noto-heading">Noto reference fonts</h2>
+			</header>
+			<div class="grid">
+				<section class="card noto-card">
+					<div class="card-header">
+						<h3>Noto Sans</h3>
+						<span class="meta">Noto Sans SC fallback</span>
+					</div>
+					<div class="sample noto-sans"></div>
+				</section>
+				<section class="card noto-card">
+					<div class="card-header">
+						<h3>Noto Sans Mono</h3>
+						<span class="meta">Noto Sans SC fallback</span>
+					</div>
+					<div class="sample noto-mono"></div>
+				</section>
+				<section class="card noto-card">
+					<div class="card-header">
+						<h3>Noto Serif</h3>
+						<span class="meta">Noto Serif SC fallback</span>
+					</div>
+					<div class="sample noto-serif"></div>
+				</section>
+			</div>
+		</section>
+
+		<footer><a href="README.md">README</a> &middot; <a href="Sha1/OFL.txt">SIL Open Font License 1.1</a></footer>
+	</main>
+
+	<script>
+		const showNoto = document.querySelector("#show-noto");
+		const disableFontSynthesis = document.querySelector("#disable-font-synthesis");
+		const fixedFontVariationSettings = document.querySelector("#fixed-font-variation-settings");
+		const fontWeight = document.querySelector("#font-weight");
+		const fontWeightValue = document.querySelector("#font-weight-value");
+		const notoSamples = document.querySelector("#noto-samples");
+		const samples = document.querySelectorAll(".sample");
+		const sampleTemplate = `I said: \u201cI've, let? DONE \u2018IT...!\u2019.\u4ed6\u8bf4\uff1a\u2018It\u2019s done;\u6ca1\uff0c\u95ee\u9898\uff1b\u5b8c\u7f8e\u2026\u2026\uff01\u2019\u884c\u3002\u884c\u5427\uff1f\u201d\uff081,000:10(kg)\uff09"it-er" -&gt; '0-1' |some|`;
+
+		samples.forEach((sample) => {
+			sample.innerHTML = `
+				<div class="sample-variant">
+					<span class="sample-variant-label">Regular</span>
+					<span class="sample-variant-content">${sampleTemplate}</span>
+				</div>
+				<div class="sample-variant">
+					<span class="sample-variant-label">em</span>
+					<span class="sample-variant-content"><em>${sampleTemplate}</em></span>
+				</div>
+				<div class="sample-variant">
+					<span class="sample-variant-label">strong</span>
+					<span class="sample-variant-content"><strong>${sampleTemplate}</strong></span>
+				</div>
+				<div class="sample-variant">
+					<span class="sample-variant-label">strong + em</span>
+					<span class="sample-variant-content"><strong><em>${sampleTemplate}</em></strong></span>
+				</div>
+			`;
+		});
+
+		/** 同步原版字体组的显示状态 */
+		const updateNotoVisibility = () => {
+			notoSamples.hidden = !showNoto.checked;
+		};
+
+		/** 同步所有样本的字体合成设置 */
+		const updateFontSynthesis = () => {
+			const fontSynthesis = disableFontSynthesis.checked ? "none" : "weight style small-caps";
+			samples.forEach((sample) => {
+				sample.style.fontSynthesis = fontSynthesis;
+			});
+		};
+
+		/** 固定各元素实际字重与字宽，避免常规字重覆盖嵌套粗体 */
+		const updateFontVariationSettings = () => {
+			samples.forEach((sample) => {
+				[sample, ...sample.querySelectorAll("*")].forEach((element) => {
+					const style = getComputedStyle(element);
+					element.style.fontVariationSettings = fixedFontVariationSettings.checked
+						? `"wght" ${style.fontWeight}, "wdth" ${parseFloat(style.fontStretch)}`
+						: "";
+				});
+			});
+		};
+
+		/** 调整基础字重并刷新嵌套样式的可变字体轴 */
+		const updateFontWeight = () => {
+			document.documentElement.style.setProperty("--sample-font-weight", fontWeight.value);
+			fontWeightValue.value = fontWeight.value;
+			updateFontVariationSettings();
+		};
+
+		showNoto.addEventListener("change", updateNotoVisibility);
+		disableFontSynthesis.addEventListener("input", updateFontSynthesis);
+		fixedFontVariationSettings.addEventListener("input", updateFontVariationSettings);
+		fontWeight.addEventListener("input", updateFontWeight);
+		updateNotoVisibility();
+		updateFontSynthesis();
+		updateFontWeight();
+	</script>
+</body>
+
+</html>

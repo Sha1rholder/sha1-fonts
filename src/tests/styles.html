@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Sha1 font style regression</title>
+	<style>
+		body { margin: 12px; font: 14px system-ui; }
+		label { margin-right: 16px; }
+		iframe { display: block; width: 100%; height: 610px; border: 0; margin-top: 12px; }
+	</style>
+</head>
+<body>
+	<label>Family <select id="family"><option>sans</option><option>mono</option><option>serif</option></select></label>
+	<label>Batch <select id="batch"><option value="0">1 / 2</option><option value="1">2 / 2</option></select></label>
+	<label><input id="synthesis" type="checkbox" checked>Disable font synthesis</label>
+	<label><input id="variation" type="checkbox" checked>Fix font variation settings</label>
+	<p>98 characters: U+0021-007E and U+2018/U+2019/U+201C/U+201D. Each panel uses the real preview styles and controls.</p>
+	<iframe id="preview" src="../../preview.html" title="Native font styles"></iframe>
+	<script>
+		const frame = document.querySelector("#preview");
+		const codepoints = [...Array.from({length: 94}, (_, index) => index + 0x21), 0x2018, 0x2019, 0x201C, 0x201D];
+		const variants = ["normal", "italic", "bold", "bold-italic"];
+
+		/** 用原预览页面的样式和开关显示逐字验证面板 */
+		function render() {
+			const doc = frame.contentDocument;
+			const family = document.querySelector("#family").value;
+			const batch = Number(document.querySelector("#batch").value);
+			for (const sample of doc.querySelectorAll(".sample")) {
+				sample.closest(".card").hidden = !sample.classList.contains(family);
+				if (!sample.classList.contains(family)) continue;
+				sample.replaceChildren();
+				for (const variant of variants) {
+					const panel = doc.createElement("section");
+					const title = doc.createElement("div");
+					title.className = "probe-title";
+					title.textContent = variant;
+					panel.append(title);
+					const content = doc.createElement("div");
+					content.className = "probe-grid";
+					for (const cp of codepoints.slice(batch * 49, (batch + 1) * 49)) {
+						const glyph = doc.createElement("span");
+						glyph.id = `probe-${variant}-${cp}`;
+						glyph.className = "probe-glyph";
+						glyph.dataset.variant = variant;
+						glyph.dataset.codepoint = cp;
+						glyph.title = `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`;
+						glyph.textContent = String.fromCodePoint(cp);
+						let text = glyph;
+						if (variant.includes("italic")) {
+							const em = doc.createElement("em");
+							em.append(text);
+							text = em;
+						}
+						if (variant.includes("bold")) {
+							const strong = doc.createElement("strong");
+							strong.append(text);
+							text = strong;
+						}
+						content.append(text);
+					}
+					panel.append(content);
+					sample.append(panel);
+				}
+			}
+			updateToggles();
+		}
+
+		/** 将测试开关转发给预览页面现有的事件处理器 */
+		function updateToggles() {
+			for (const [control, target] of [["synthesis", "disable-font-synthesis"], ["variation", "fixed-font-variation-settings"]]) {
+				const input = frame.contentDocument.getElementById(target);
+				input.checked = document.getElementById(control).checked;
+				input.dispatchEvent(new frame.contentWindow.Event("input", {bubbles: true}));
+			}
+		}
+
+		frame.addEventListener("load", () => {
+			const style = frame.contentDocument.createElement("style");
+			style.textContent = `
+				:root { color-scheme: light; color: #000; background: #fff; }
+				body { margin: 0; }
+				main { padding: 0; margin: 0; max-width: none; }
+				header, footer, .card-header { display: none; }
+				.card { border: 0; border-radius: 0; background: #fff; overflow: visible; }
+				.sample { display: grid; grid-template-columns: 448px 448px; gap: 8px 16px; padding: 0; overflow: visible; font-size: 32px; line-height: 38px; color: #000; }
+				.probe-title { height: 24px; font: 14px/24px system-ui; }
+				.probe-grid { display: grid; grid-template-columns: repeat(7, 64px); }
+				.probe-glyph { display: block; box-sizing: border-box; width: 64px; height: 38px; padding-left: 12px; white-space: pre; }
+			`;
+			frame.contentDocument.head.append(style);
+			render();
+		});
+		document.querySelector("#family").addEventListener("change", render);
+		document.querySelector("#batch").addEventListener("change", render);
+		document.querySelector("#synthesis").addEventListener("input", updateToggles);
+		document.querySelector("#variation").addEventListener("input", updateToggles);
+	</script>
+</body>
+</html>

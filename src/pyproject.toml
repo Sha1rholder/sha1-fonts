@@ -1,0 +1,16 @@
+[project]
+name = "sha1-fonts"
+version = "0.1.0"
+description = "Minimal Noto-derived variable font patches built with FontForge"
+requires-python = ">=3.14"
+dependencies = ["fonttools"]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
+[tool.ruff.format]
+indent-style = "tab"

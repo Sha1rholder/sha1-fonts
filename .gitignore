@@ -1,0 +1,7 @@
+temp*
+/Sha1/
+
+AGENTS.override.md
+
+.venv/
+__pycache__/
