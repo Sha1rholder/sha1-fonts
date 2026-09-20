@@ -22,38 +22,11 @@ Noto系列的字体补丁，对中英混输时的易混淆字符实现更高区�
 - `…`
 - `—`
 
-100%由GPT辅助开发
+Vibe-coded by GPT.
 
-## 下载与构建
-
-从[GitHub Releases](https://github.com/Sha1rholder/sha1-fonts/releases/latest)选择一个压缩包即可：
-
-- `Sha1-Complete.7z`：可独立使用的完整字体，位于`Sha1/complete/`
-- `Sha1-Patch.7z`：需要搭配Noto字体使用的轻量补丁，位于`Sha1/patch/`
-
-每个压缩包都包含OFL许可证，以及对应系列的构建清单和验证报告。SHA-256校验和见Release说明
-
-`Sha1/`为构建产物，已由Git忽略。每次向`master`推送更新，GitHub Actions都会构建并验证字体、运行回归测试，然后发布标签为`v<N>`的Release，其中`N`为发布工作流的运行编号，字体内部版本为`N.000`
-
-重跑同一次任务时编号不变，失败的任务可能造成跳号。在`master`上手动运行工作流即可发布新版本，无需修改源码
-
-本地构建和浏览器预览需要安装Git LFS、uv、支持Python脚本的FontForge和HarfBuzz，然后运行：
-
-```sh
-git lfs pull
-uv run --frozen --project src python src/main.py build
-uv run --frozen --project src python -m unittest discover -s src/tests -t src
-```
-
-本地构建默认版本为`0.000`。通过环境变量指定版本，无需修改源码：
-
-```sh
-SHA1_RELEASE_NUMBER=42 uv run --frozen --project src python src/main.py build
-```
-
-编号范围为0到32767。单独验证时会读取`Sha1/manifest.json`中的版本，不需要再次设置环境变量
-
-详细说明见[构建文档](src/README.md)，浏览器预览使用本地构建的字体
+从[GitHub Releases](https://github.com/Sha1rholder/sha1-fonts/releases/latest)选择一个压缩包：
+- `Sha1-Complete.7z`：可独立使用的完整字体
+- `Sha1-Patch.7z`：需要搭配Noto系列字体使用的轻量补丁
 
 ## Sha1 Sans
 
