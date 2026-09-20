@@ -1,62 +1,60 @@
-{
-	"name": "Build and release fonts",
-	"on": {
-		"push": {"branches": ["master"]},
-		"workflow_dispatch": {}
-	},
-	"permissions": {"contents": "read"},
-	"concurrency": {
-		"group": "release-${{ github.sha }}",
-		"cancel-in-progress": false
-	},
-	"defaults": {"run": {"shell": "bash"}},
-	"jobs": {
-		"release": {
-			"if": "github.ref == 'refs/heads/master'",
-			"runs-on": "ubuntu-24.04",
-			"timeout-minutes": 60,
-			"permissions": {"contents": "write"},
-			"steps": [
-				{
-					"name": "Check out sources and LFS fonts",
-					"uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-					"with": {"lfs": true, "persist-credentials": false}
-				},
-				{
-					"name": "Set up uv and Python",
-					"uses": "astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4",
-					"with": {
-						"version": "0.12.13",
-						"python-version": "3.14",
-						"enable-cache": true,
-						"cache-dependency-glob": "src/uv.lock"
-					}
-				},
-				{
-					"name": "Install FontForge, HarfBuzz, and zip",
-					"run": "sudo apt-get update\nsudo apt-get install --no-install-recommends -y fontforge libharfbuzz-bin zip"
-				},
-				{
-					"name": "Install locked Python dependencies",
-					"run": "uv sync --frozen --project src"
-				},
-				{
-					"name": "Build and verify fonts",
-					"run": "uv run --frozen --project src python src/main.py build"
-				},
-				{
-					"name": "Run regression tests",
-					"run": "uv run --frozen --project src python -m unittest discover -s src/tests -t src"
-				},
-				{
-					"name": "Package and publish release",
-					"env": {
-						"GH_TOKEN": "${{ github.token }}",
-						"GH_REPO": "${{ github.repository }}"
-					},
-					"run": "bash .github/scripts/release.sh"
-				}
-			]
-		}
-	}
-}
+name: Build and release
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.sha }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out sources and LFS fonts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          lfs: true
+          persist-credentials: false
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
+        with:
+          version: 0.12.13
+          python-version: "3.14"
+          enable-cache: true
+          cache-dependency-glob: src/uv.lock
+
+      - name: Install FontForge, HarfBuzz, and zip
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y fontforge libharfbuzz-bin zip
+
+      - name: Install locked Python dependencies
+        run: uv sync --frozen --project src
+
+      - name: Build and verify fonts
+        run: uv run --frozen --project src python src/main.py build
+
+      - name: Run regression tests
+        run: uv run --frozen --project src python -m unittest discover -s src/tests -t src
+
+      - name: Package and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: bash .github/scripts/release.sh
