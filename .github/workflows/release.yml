@@ -22,6 +22,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      SHA1_RELEASE_NUMBER: ${{ github.run_number }}
     permissions:
       contents: write
     steps:
@@ -39,10 +41,10 @@ jobs:
           enable-cache: true
           cache-dependency-glob: src/uv.lock
 
-      - name: Install FontForge, HarfBuzz, and zip
+      - name: Install FontForge, HarfBuzz, and 7-Zip
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y fontforge libharfbuzz-bin zip
+          sudo apt-get install --no-install-recommends -y fontforge libharfbuzz-bin 7zip jq
 
       - name: Install locked Python dependencies
         run: uv sync --frozen --project src

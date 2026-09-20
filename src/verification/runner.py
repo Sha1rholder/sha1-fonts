@@ -30,6 +30,7 @@ def main() -> None:
 	logging.basicConfig(level=logging.ERROR)
 	manifest = json.loads((DIST / "manifest.json").read_text(encoding="ascii"))
 	metadata.check_manifest(manifest)
+	version = manifest["version"]
 	jobs = json.loads((TEMP / "jobs.json").read_text(encoding="ascii"))
 	validate_jobs(jobs)
 	postscript_names = set()
@@ -40,19 +41,21 @@ def main() -> None:
 			[job for job in jobs if job["family"] == key and job["italic"] == italic],
 			italic,
 			postscript_names,
+			version,
 		)
 		for key, config in FAMILIES.items()
 		for italic in italic_styles(key)
 	]
 	latin_reports = styles.check_latin_styles()
 	complete_reports = [
-		complete.verify_complete_family(config, italic)
+		complete.verify_complete_family(config, italic, version)
 		for key, config in FAMILIES.items()
 		for italic in italic_styles(key)
 	]
 	(DIST / "verification.json").write_text(
 		json.dumps(
 			{
+				"version": version,
 				"fonts": reports,
 				"latin_styles": latin_reports,
 				"complete_fonts": complete_reports,
@@ -73,6 +76,7 @@ def verify_family(
 	family_jobs: list[BuildJob],
 	italic: bool,
 	postscript_names: set[str],
+	version: str,
 ):
 	"""验证一个家族样式的元数据、全部实例和整形结果"""
 	path = font_path(config, italic)
@@ -80,7 +84,9 @@ def verify_family(
 		TTFont(path, checkChecksums=2, recalcTimestamp=False) as font,
 		TTFont(variable_path(config["source"], italic)) as original,
 	):
-		metadata.check_font(font, key, config, italic, family_jobs, postscript_names)
+		metadata.check_font(
+			font, key, config, italic, family_jobs, postscript_names, version
+		)
 		upright = TTFont(font_path(config)) if italic else None
 		try:
 			for job in family_jobs:

@@ -257,7 +257,7 @@ def _finalize(font: TTFont, config: FamilyConfig, italic: bool) -> None:
 	head = cast(Any, font["head"])
 	head.created = head.modified = EPOCH
 	head.fontRevision = float(VERSION)
-	for name_id in (1, 2, 3, 4, 6, 16, 17, 25):
+	for name_id in (1, 2, 3, 4, 5, 6, 16, 17, 25):
 		font["name"].removeNames(name_id)
 	family = config["complete"]
 	style = "Italic" if italic else "Regular"
@@ -268,6 +268,7 @@ def _finalize(font: TTFont, config: FamilyConfig, italic: bool) -> None:
 			(2, style),
 			(3, f"{VERSION};SHA1;{postscript}"),
 			(4, f"{family} {style}"),
+			(5, f"Version {VERSION}"),
 			(6, postscript),
 			(16, family),
 			(17, style),

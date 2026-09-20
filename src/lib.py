@@ -1,11 +1,26 @@
 """定义字体配置、项目路径和来源字体处理"""
 
 import hashlib
+import os
 from pathlib import Path
 from typing import NotRequired, TypedDict
 
+
+def release_version(number: str) -> str:
+	"""将发布计数转为字体版本并限制在有符号定点数范围内"""
+	if (
+		not number.isascii()
+		or not number.isdecimal()
+		or len(number) > 5
+		or str(int(number)) != number
+		or int(number) > 32767
+	):
+		raise ValueError("SHA1_RELEASE_NUMBER must be an integer from 0 to 32767")
+	return f"{number}.000"
+
+
 EPOCH = 3856896000
-VERSION = "1.131"
+VERSION = release_version(os.environ.get("SHA1_RELEASE_NUMBER", "0"))
 OUTLINE_DESIGN_VERSION = 3
 WEIGHTS = {
 	100: "Thin",

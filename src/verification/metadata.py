@@ -6,19 +6,39 @@ import lib as sources
 from lib import (
 	DIST,
 	FAMILIES,
-	VERSION,
 	complete_font_path,
 	font_path,
 	italic_styles,
 	patch_codepoints,
+	release_version,
 	style_name,
 )
 
 from .geometry import best_cmap, require
 
 
+def check_version(font, version: str, label: str) -> None:
+	"""检查各平台版本字符串、唯一标识和字体头与发布清单一致"""
+	for name_id, expected in ((5, f"Version {version}"), (3, f"{version};SHA1;")):
+		records = [name for name in font["name"].names if name.nameID == name_id]
+		require(bool(records), f"Missing version record: {label} {name_id}")
+		for record in records:
+			value = record.toUnicode()
+			require(
+				value == expected if name_id == 5 else value.startswith(expected),
+				f"Font version record: {label} {name_id}",
+			)
+	head = cast(Any, font["head"])
+	require(head.fontRevision == float(version), f"Font revision: {label}")
+
+
 def check_manifest(manifest):
 	"""核验来源哈希以及发布家族样式的完整覆盖"""
+	version = manifest["version"]
+	require(
+		version == release_version(version.removesuffix(".000")),
+		"Manifest release version",
+	)
 	require(
 		manifest["sources_sha256"] == sources.source_hashes(), "Source hashes changed"
 	)
@@ -53,7 +73,7 @@ def check_manifest(manifest):
 	)
 
 
-def check_font(font, key, config, italic, family_jobs, postscript_names):
+def check_font(font, key, config, italic, family_jobs, postscript_names, version):
 	"""核验一个家族样式的元数据并记录全局唯一名称"""
 	label = f"{key} {'Italic' if italic else 'Roman'}"
 	codepoints = patch_codepoints(config, italic)
@@ -86,14 +106,8 @@ def check_font(font, key, config, italic, family_jobs, postscript_names):
 		"gvar" in font and "HVAR" in font and "STAT" in font,
 		f"Missing variation tables: {key}",
 	)
-	require(
-		font["name"].getDebugName(5) == f"Version {VERSION}", f"Font version: {key}"
-	)
+	check_version(font, version, label)
 	head = cast(Any, font["head"])
-	require(
-		abs(head.fontRevision - float(VERSION)) <= 1 / 65536,
-		f"Font revision: {key}",
-	)
 	for name_id in (1, 4, 6, 16, 25):
 		debug_name = font["name"].getDebugName(name_id)
 		if debug_name is None:

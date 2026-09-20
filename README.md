@@ -1,4 +1,4 @@
-# Sha1 fonts
+# Sha1字体
 
 Noto系列的字体补丁，对中英混输时的易混淆字符实现更高区分度并优化部分符号在不开启连字时的表现
 
@@ -22,15 +22,22 @@ Noto系列的字体补丁，对中英混输时的易混淆字符实现更高区�
 - `…`
 - `—`
 
-100% vibe coded with GPT.
+100%由GPT辅助开发
 
-## Download and build
+## 下载与构建
 
-Download `Sha1-fonts.zip` from [GitHub Releases](https://github.com/Sha1rholder/sha1-fonts/releases/latest). The archive contains `Sha1/complete/`, `Sha1/patch/`, the OFL license, the build manifest, and the verification report. `SHA256SUMS` contains the archive checksum.
+从[GitHub Releases](https://github.com/Sha1rholder/sha1-fonts/releases/latest)选择一个压缩包即可：
 
-`Sha1/` is generated and ignored by Git. Every push to `master` builds and verifies the fonts, runs the regression tests, and publishes a release tagged `build-<commit SHA>`. The workflow can also be run manually on `master`.
+- `Sha1-Complete.7z`：可独立使用的完整字体，位于`Sha1/complete/`
+- `Sha1-Patch.7z`：需要搭配Noto字体使用的轻量补丁，位于`Sha1/patch/`
 
-For local builds and browser previews, install Git LFS, uv, FontForge with Python scripting support, and HarfBuzz, then run:
+每个压缩包都包含OFL许可证，以及对应系列的构建清单和验证报告。SHA-256校验和见Release说明
+
+`Sha1/`为构建产物，已由Git忽略。每次向`master`推送更新，GitHub Actions都会构建并验证字体、运行回归测试，然后发布标签为`v<N>`的Release，其中`N`为发布工作流的运行编号，字体内部版本为`N.000`
+
+重跑同一次任务时编号不变，失败的任务可能造成跳号。在`master`上手动运行工作流即可发布新版本，无需修改源码
+
+本地构建和浏览器预览需要安装Git LFS、uv、支持Python脚本的FontForge和HarfBuzz，然后运行：
 
 ```sh
 git lfs pull
@@ -38,7 +45,15 @@ uv run --frozen --project src python src/main.py build
 uv run --frozen --project src python -m unittest discover -s src/tests -t src
 ```
 
-See [the build documentation](src/README.md) for details. To preview a downloaded release, extract its `Sha1/` directory into the repository root.
+本地构建默认版本为`0.000`。通过环境变量指定版本，无需修改源码：
+
+```sh
+SHA1_RELEASE_NUMBER=42 uv run --frozen --project src python src/main.py build
+```
+
+编号范围为0到32767。单独验证时会读取`Sha1/manifest.json`中的版本，不需要再次设置环境变量
+
+详细说明见[构建文档](src/README.md)，浏览器预览使用本地构建的字体
 
 ## Sha1 Sans
 
@@ -91,8 +106,8 @@ Sha1 Serif = Sha1 Serif Patch + Noto Serif + Noto Serif SC
 - `-`: Noto Serif上移到和Noto Serif的`>`中间持平
 - `…`: Noto Serif上移到和Noto Serif的`>`中间持平
 
-# License and provenance
+# 许可证与来源
 
-All original Noto files remain unchanged. The derived fonts use Sha1 family and PostScript names and are released under SIL OFL 1.1. Each build includes the generated license at `Sha1/OFL.txt` in the release archive.
+原始Noto文件保持不变。派生字体使用Sha1家族名称和PostScript名称，以SIL OFL 1.1发布。每个Release压缩包都包含构建生成的许可证`Sha1/OFL.txt`
 
-Implementation references: [FontForge Python scripting](https://fontforge.org/docs/scripting/python.html), [FontForge glyph API](https://fontforge.org/docs/scripting/python/fontforge.html), and [fontTools varLib](https://fonttools.readthedocs.io/en/latest/varLib/index.html).
+实现参考：[FontForge的Python脚本接口](https://fontforge.org/docs/scripting/python.html)、[FontForge字形接口](https://fontforge.org/docs/scripting/python/fontforge.html)和[fontTools变量字体构建模块](https://fonttools.readthedocs.io/en/latest/varLib/index.html)

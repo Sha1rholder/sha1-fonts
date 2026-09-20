@@ -2,7 +2,7 @@
 
 字形需求以[根目录README](../README.md)为准，本文记录实现、构建和验证方式
 
-当前字体版本为1.131，已按根目录README实现各项补丁。三个家族的艺术字`O`采用右上开口、斜笔与弯钩设计，Sans和Serif同时提供原生Italic样式
+字体版本在构建时由`SHA1_RELEASE_NUMBER`传入：发布工作流的第`N`次运行生成字体版本`N.000`和Release标签`vN`，本地构建默认版本为`0.000`。自定义艺术字`O`和原生Italic样式以根目录README为准
 
 ## 快速开始
 
@@ -121,7 +121,7 @@ flowchart TD
 
 FontForge导出原始二次曲线节点，fontTools按相同点序构建TrueType母版，拒绝拓扑不一致的母版，再生成`fvar`、`gvar`、`HVAR`和`STAT`。命名位置与各自母版一致，中间位置采用相邻网格的双线性插值
 
-重叠轮廓保留TrueType重叠标志，字体不含提示信息。原始Noto文件和许可证保持字节级不变，派生字体使用Sha1家族和PostScript名称，`name`表版本与`head.fontRevision`均为1.131
+重叠轮廓保留TrueType重叠标志，字体不含提示信息。原始Noto文件和许可证保持不变，派生字体使用Sha1家族和PostScript名称，`name`表版本与`head.fontRevision`均记录传入的发布版本。单独验证时从构建清单读取版本
 
 | 模块 | 负责内容 |
 | --- | --- |
@@ -156,7 +156,7 @@ FontForge导出原始二次曲线节点，fontTools按相同点序构建TrueType
 - 全部286个命名及中间位置的`O`经独立多边形检查，无自交或字腔越界
 - 与修改前的发布字体比较，全部172个命名位置仅`O`轮廓变化，其步进及其他字形的轮廓和步进保持一致
 
-Regression tests read locally generated fonts from `Sha1/` and the tracked Noto sources. Build before running tests, including after a fresh clone. `Sha1/verification.json` is generated locally and included in each release archive.
+回归测试读取`Sha1/`中的本地构建字体和仓库中的Noto来源，首次克隆或修改字形代码后应先构建再运行测试。验证报告生成于`Sha1/verification.json`，发布时按系列分别包含在对应压缩包中
 
 代码检查从`src/`运行：
 
