@@ -42,6 +42,8 @@ def check_instance(
 		custom.check_o(instance, base, position)
 	if 0x7C in cmap:
 		latin.check_bar(instance, base, position)
+	if 0x31 in cmap:
+		latin.check_one(instance, base, job["family"], position)
 	alternate = TTFont(job["alternate"]) if job.get("alternate") else None
 	quotes = TTFont(job["quotes"]) if job.get("quotes") else None
 	styles.check_style_sources(job, base, cjk, alternate, quotes)

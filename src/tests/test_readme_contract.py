@@ -6,12 +6,13 @@ from copy import deepcopy
 from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.ttLib import TTFont
+from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
 from fontTools.varLib.instancer import instantiateVariableFont
 
 from lib import FAMILIES, font_path, italic_styles, subset_font, variable_path
 from verification.custom import check_o
 from verification.geometry import best_cmap, bounds
-from verification.latin import check_mono_dash, check_mono_letters, check_zero
+from verification.latin import check_bar, check_mono_dash, check_one, check_zero
 
 
 def regular_instance(path):
@@ -147,25 +148,102 @@ class ReadmeContractTests(unittest.TestCase):
 			with self.assertRaisesRegex(AssertionError, "Zero dot count"):
 				check_zero(patch, base, "serif", "missing dot")
 
-	def test_mono_one_retains_source_stem(self):
-		"""确认Mono数字1只去底横并拒绝原始底横及Sans替代轮廓"""
+	def test_ones_have_flag_and_foot(self):
+		"""核验五个样式的实心尖顶和家族底横并拒绝原始数字1"""
+		for key, config in FAMILIES.items():
+			for italic in italic_styles(key):
+				with (
+					self.subTest(family=key, italic=italic),
+					regular_instance(font_path(config, italic)) as patch,
+					regular_instance(variable_path(config["source"], italic)) as base,
+				):
+					check_one(patch, base, key, "regular")
+					replace_glyph(patch, base, 0x31)
+					with self.assertRaises(AssertionError):
+						check_one(patch, base, key, "original one")
+
+	def test_one_rejects_flat_top(self):
+		"""拒绝旗头与竖干顶部之间重新出现水平台阶"""
 		with (
 			regular_instance(font_path(FAMILIES["mono"])) as patch,
 			regular_instance(variable_path("Noto_Sans_Mono")) as base,
-			regular_instance(variable_path("Noto_Sans")) as wrong,
 		):
-			check_mono_letters(patch, base, "regular")
-			for source in (base, wrong):
-				with self.subTest(source=source["name"].getDebugName(1)):
-					replace_glyph(patch, source, 0x31)
-					# 令错误供体也采用Mono步进，确保检查的重点仍是轮廓
-					name = best_cmap(patch)[0x31]
-					patch["hmtx"][name] = (
-						base["hmtx"][best_cmap(base)[0x31]][0],
-						patch["hmtx"][name][1],
+			glyph = patch["glyf"][best_cmap(patch)[0x31]]
+			peak = max(
+				range(len(glyph.coordinates)), key=lambda i: glyph.coordinates[i][1]
+			)
+			points = list(glyph.coordinates)
+			x, y = points[peak]
+			glyph.coordinates = GlyphCoordinates(
+				[*points[:peak], (x - 20, y), *points[peak:]]
+			)
+			glyph.flags.insert(peak, 1)
+			glyph.endPtsOfContours = [end + 1 for end in glyph.endPtsOfContours]
+			with self.assertRaisesRegex(AssertionError, "One single apex"):
+				check_one(patch, base, "mono", "flat top")
+
+	def test_sans_one_rejects_original_advance(self):
+		"""拒绝Sans数字1保留原来的过宽步进"""
+		with (
+			regular_instance(font_path(FAMILIES["sans"])) as patch,
+			regular_instance(variable_path("Noto_Sans")) as base,
+		):
+			name = best_cmap(patch)[0x31]
+			patch["hmtx"][name] = (
+				base["hmtx"][best_cmap(base)[0x31]][0],
+				patch["hmtx"][name][1],
+			)
+			with self.assertRaisesRegex(AssertionError, "One advance"):
+				check_one(patch, base, "sans", "original advance")
+
+	def test_serif_one_retains_native_foot(self):
+		"""拒绝破坏Serif数字1原生底部衬线的修改"""
+		with (
+			regular_instance(font_path(FAMILIES["serif"])) as patch,
+			regular_instance(variable_path("Noto_Serif")) as base,
+		):
+			glyph = patch["glyf"][best_cmap(patch)[0x31]]
+			for index, (x, y) in enumerate(glyph.coordinates):
+				if y < 100:
+					glyph.coordinates[index] = (x + 20, y)
+			with self.assertRaisesRegex(AssertionError, "Source outline was changed"):
+				check_one(patch, base, "serif", "changed foot")
+
+	def test_one_rejects_missing_foot(self):
+		"""拒绝删除底横后退回旧设计的数字1"""
+		with (
+			regular_instance(font_path(FAMILIES["mono"])) as patch,
+			regular_instance(variable_path("Noto_Sans_Mono")) as base,
+		):
+			glyph = patch["glyf"][best_cmap(patch)[0x31]]
+			glyph.numberOfContours -= 1
+			glyph.endPtsOfContours.pop()
+			glyph.coordinates = glyph.coordinates[: glyph.endPtsOfContours[-1] + 1]
+			glyph.flags = glyph.flags[: glyph.endPtsOfContours[-1] + 1]
+			with self.assertRaisesRegex(AssertionError, "One flag/foot contour count"):
+				check_one(patch, base, "mono", "missing foot")
+
+	def test_bars_use_full_height(self):
+		"""核验五个样式占满升降部并拒绝原来的百分之十加长"""
+		for key, config in FAMILIES.items():
+			for italic in italic_styles(key):
+				with (
+					self.subTest(family=key, italic=italic),
+					regular_instance(font_path(config, italic)) as patch,
+					regular_instance(variable_path(config["source"], italic)) as base,
+				):
+					check_bar(patch, base, "regular")
+					glyph = patch["glyf"][best_cmap(patch)[0x7C]]
+					_, low, _, high = bounds(base, 0x7C)
+					old_low, old_high = (
+						low - (high - low) * 0.05,
+						high + (high - low) * 0.05,
 					)
-					with self.assertRaises(AssertionError):
-						check_mono_letters(patch, base, "wrong one")
+					for index in range(glyph.endPtsOfContours[0] + 1):
+						x, y = glyph.coordinates[index]
+						glyph.coordinates[index] = (x, old_low if y < 0 else old_high)
+					with self.assertRaisesRegex(AssertionError, "Bar full height"):
+						check_bar(patch, base, "old length")
 
 	def test_mono_em_dash_uses_sans(self):
 		"""确认Mono显式提供Sans破折号并拒绝等宽来源"""

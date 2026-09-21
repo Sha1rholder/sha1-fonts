@@ -91,6 +91,7 @@ def _require_source_samples(
 	"""比较补丁、拉丁来源和直立SC来源的代表性变量字形"""
 	patch_codepoint = next(iter(patch_codepoints(config, italic)))
 	_sample_matches(complete_path, patch_path, patch_codepoint, config, italic)
+	_sample_matches(complete_path, patch_path, 0x31, config, italic)
 	_sample_matches(complete_path, base_path, 0x41, config, italic, tolerance=1)
 	if not italic:
 		_sample_matches(

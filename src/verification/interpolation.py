@@ -7,7 +7,7 @@ from fontTools.varLib.instancer import instantiateVariableFont
 from build import masters as master_builder
 from lib import WEIGHTS, WIDTHS, BuildJob, FamilyConfig, subset_font, variable_path
 
-from . import custom
+from . import custom, latin
 from .geometry import best_cmap, bounds, require
 
 
@@ -21,7 +21,9 @@ def check_intermediate(
 		(job["weight"], job["width"]): master_builder.master_font(job, config, original)
 		for job in jobs
 	}
-	source = subset_font(variable_path(config["source"], jobs[0]["italic"]), (0x4F,))
+	source = subset_font(
+		variable_path(config["source"], jobs[0]["italic"]), (0x31, 0x4F, 0x7C)
+	)
 	count = 0
 	for low, high in pairwise(weights):
 		for narrow, wide in pairwise(widths):
@@ -65,11 +67,11 @@ def check_intermediate(
 				{"wght": (low + high) / 2, "wdth": (narrow + wide) / 2},
 				inplace=False,
 			) as base:
-				custom.check_o(
-					instance,
-					base,
-					f"{config['patch']} {'Italic' if jobs[0]['italic'] else 'Roman'} {(low + high) / 2} {(narrow + wide) / 2}",
-				)
+				position = f"{config['patch']} {'Italic' if jobs[0]['italic'] else 'Roman'} {(low + high) / 2} {(narrow + wide) / 2}"
+				custom.check_o(instance, base, position)
+				latin.check_bar(instance, base, position)
+				if 0x31 in best_cmap(instance):
+					latin.check_one(instance, base, jobs[0]["family"], position)
 			instance.close()
 			count += 1
 	for master in masters.values():

@@ -14,8 +14,8 @@ from lib import FAMILIES, QUOTES, font_path, italic_styles, variable_path
 from .geometry import best_cmap, bounds, require
 
 ITALIC_CODEPOINTS = {
-	"sans": {0x2D, 0x30, 0x4F, 0x6C, 0x7C, 0x2026, *QUOTES},
-	"serif": {0x2D, 0x30, 0x4F, 0x7C, 0x2026},
+	"sans": {0x2D, 0x30, 0x31, 0x4F, 0x6C, 0x7C, 0x2026, *QUOTES},
+	"serif": {0x2D, 0x30, 0x31, 0x4F, 0x7C, 0x2026},
 }
 SLANTED_CODEPOINTS = {
 	"sans": {0x6C},
@@ -68,11 +68,11 @@ def check_italic_coverage(instance, upright, job):
 			changed.add(cp)
 	require(
 		(
-			{0x30, 0x4F, 0x6C}
+			{0x30, 0x31, 0x4F, 0x6C}
 			if job["family"] == "sans"
 			else {0x31}
 			if job["family"] == "mono"
-			else {0x30, 0x4F}
+			else {0x30, 0x31, 0x4F}
 		)
 		<= changed,
 		f"Missing italic outlines: {job['family']}",

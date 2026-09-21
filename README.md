@@ -3,7 +3,7 @@
 Noto系列的字体补丁，对中英混输时的易混淆字符实现更高区分度并优化部分符号在不开启连字时的表现
 
 易混淆字符：
-- `I` `l` `1` `|`
+- `I` `l` `1` `7` `|`
 - `,` `，`
 - `:` `：`
 - `;` `；`
@@ -33,7 +33,8 @@ Vibe-coded by GPT.
 Sha1 Sans = Sha1 Sans Patch + Noto Sans + Noto Sans SC
 
 - `l`: Noto Sans SC加Variable font
-- `|`: Noto Sans加长，中间加个实心小圆点
+- `1`: Noto Sans顶部加实心三角flag，底部加短横，步进缩短15%
+- `|`: Noto Sans加长占满高度，中间加个实心小圆点
 - `：` `；` `！` `？`: Noto Sans SC小圆点改成类似`。`的空心圆
 - `！` `？`: 主体上移且空心圆点下移
 - `，` `；` `！` `？`: 实心部分加粗使其匹配空心圆点的视觉重量
@@ -50,8 +51,8 @@ Sha1 Sans = Sha1 Sans Patch + Noto Sans + Noto Sans SC
 Sha1 Sans Mono = Sha1 Sans Mono Patch + Noto Sans Mono + Noto Sans SC
 
 - `l`: Noto Sans Mono去掉左下角的横
-- `1`: Noto Sans Mono去掉底部的横
-- `|`: Noto Sans Mono加长，中间加个实心小圆点
+- `1`: Noto Sans Mono顶部加实心三角flag，底部横线稍微缩短
+- `|`: Noto Sans Mono加长占满高度，中间加个实心小圆点
 - `：` `；` `！` `？`: Noto Sans SC小圆点改成类似`。`的空心圆
 - `！` `？`: 主体上移且空心圆点下移
 - `，` `；` `！` `？`: 实心部分加粗使其匹配空心圆点的视觉重量
@@ -68,7 +69,8 @@ Sha1 Sans Mono = Sha1 Sans Mono Patch + Noto Sans Mono + Noto Sans SC
 
 Sha1 Serif = Sha1 Serif Patch + Noto Serif + Noto Serif SC
 
-- `|`: Noto Serif加长，中间加个实心小圆点
+- `1`: Noto Serif顶部加实心三角flag，底部横线稍微缩短
+- `|`: Noto Serif加长占满高度，中间加个实心小圆点
 - `：` `；` `！` `？`: Noto Serif SC小圆点改成类似`。`的空心圆
 - `！` `？`: 主体上移且空心圆点下移
 - `，` `；` `！` `？`: 实心部分加粗使其匹配空心圆点的视觉重量
