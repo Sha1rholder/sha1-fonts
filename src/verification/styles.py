@@ -24,7 +24,7 @@ SLANTED_CODEPOINTS = {
 }
 
 
-def check_style_sources(job, base, cjk, alternate, quotes):
+def check_style_sources(job, base, cjk, quotes):
 	"""核对各借用来源的样式选择和预期的直立回退"""
 	require(
 		set(job["slanted_codepoints"])
@@ -34,7 +34,6 @@ def check_style_sources(job, base, cjk, alternate, quotes):
 	for role, font, has_italic in (
 		("base", base, job["family"] != "mono"),
 		("cjk", cjk, False),
-		("alternate", alternate, False),
 		("quotes", quotes, True),
 	):
 		if font is not None:

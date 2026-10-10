@@ -37,11 +37,6 @@ def prepare_jobs(
 		if key != "serif"
 		else None
 	)
-	alternate = (
-		sources.subset_font(variable_path("Noto_Sans"), (0x2014,))
-		if key == "mono"
-		else None
-	)
 	style_source = base
 	jobs: list[BuildJob] = []
 	for weight, weight_name in WEIGHTS.items():
@@ -85,16 +80,10 @@ def prepare_jobs(
 				quote_path = work / f"quotes-{stem}.ttf"
 				sources.instantiate(quotes, weight, width, quote_path)
 				job["quotes"] = str(quote_path)
-			if alternate is not None:
-				alternate_path = work / f"alternate-{stem}.ttf"
-				sources.instantiate(alternate, weight, width, alternate_path)
-				job["alternate"] = str(alternate_path)
 			jobs.append(job)
 	base.close()
 	if quotes is not None:
 		quotes.close()
-	if alternate is not None:
-		alternate.close()
 	return jobs
 
 

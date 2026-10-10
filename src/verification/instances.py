@@ -44,12 +44,9 @@ def check_instance(
 		latin.check_bar(instance, base, position)
 	if 0x31 in cmap:
 		latin.check_one(instance, base, job["family"], position)
-	alternate = TTFont(job["alternate"]) if job.get("alternate") else None
 	quotes = TTFont(job["quotes"]) if job.get("quotes") else None
-	styles.check_style_sources(job, base, cjk, alternate, quotes)
-	latin.check_em_dash(
-		instance, alternate if job["family"] == "mono" else base, position
-	)
+	styles.check_style_sources(job, base, cjk, quotes)
+	latin.check_em_dash(instance, base, position)
 	if quotes is not None:
 		latin.check_quotes(instance, quotes, job["family"], position)
 	if job["family"] == "sans" and 0x6C in cmap:
@@ -61,6 +58,6 @@ def check_instance(
 		styles.check_italic_coverage(actual_instance, upright, job)
 	if instance is not actual_instance:
 		actual_instance.close()
-	for resource in (instance, expected, base, cjk, alternate, quotes):
+	for resource in (instance, expected, base, cjk, quotes):
 		if resource is not None:
 			resource.close()

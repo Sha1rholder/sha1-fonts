@@ -54,7 +54,7 @@ Sha1 Sans Mono = Sha1 Sans Mono Patch + Noto Sans Mono + Noto Sans SC
 - `l`: Noto Sans Mono去掉左下角的横
 - `1`: Noto Sans Mono顶部加实心三角flag，底部横线稍微缩短
 - `|`: Noto Sans Mono加长占满高度，中间加个实心小圆点
-- `—`: Noto Sans中间加个实心小圆点
+- `—`: Noto Sans Mono中间加个实心小圆点
 - `：` `；` `！` `？`: Noto Sans SC小圆点改成类似`。`的空心圆
 - `！` `？`: 主体上移且空心圆点下移
 - `，` `；` `！` `？`: 实心部分加粗使其匹配空心圆点的视觉重量
@@ -72,7 +72,7 @@ Sha1 Serif = Sha1 Serif Patch + Noto Serif + Noto Serif SC
 
 - `1`: Noto Serif顶部加实心三角flag，底部横线稍微缩短
 - `|`: Noto Serif加长占满高度，中间加个实心小圆点
-- `—`: Noto Sans中间加个实心小圆点
+- `—`: Noto Serif中间加个实心小圆点
 - `：` `；` `！` `？`: Noto Serif SC小圆点改成类似`。`的空心圆
 - `！` `？`: 主体上移且空心圆点下移
 - `，` `；` `！` `？`: 实心部分加粗使其匹配空心圆点的视觉重量

@@ -38,12 +38,11 @@ def patch_master(job: BuildJob, donors) -> None:
 	base = fontforge.open(job["base"])
 	cjk = donors[job["cjk"]]
 	quotes = fontforge.open(job["quotes"]) if job.get("quotes") else None
-	alternate = fontforge.open(job["alternate"]) if job.get("alternate") else None
 	target = fontforge.font()
 	target.em = base.em
 	target.is_quadratic = True
 	punctuation.patch_cjk(target, cjk, job)
-	latin.patch_latin(target, base, cjk, quotes, alternate, job)
+	latin.patch_latin(target, base, cjk, quotes, job)
 	custom.patch_o(target, base, job)
 	glyphs = {glyph.unicode: glyph for glyph in target.glyphs()}
 	for codepoint in job["slanted_codepoints"]:
@@ -64,5 +63,3 @@ def patch_master(job: BuildJob, donors) -> None:
 	base.close()
 	if quotes is not None:
 		quotes.close()
-	if alternate is not None:
-		alternate.close()

@@ -21,7 +21,7 @@ def release_version(number: str) -> str:
 
 EPOCH = 3856896000
 VERSION = release_version(os.environ.get("SHA1_RELEASE_NUMBER", "0"))
-OUTLINE_DESIGN_VERSION = 7
+OUTLINE_DESIGN_VERSION = 8
 WEIGHTS = {
 	100: "Thin",
 	200: "ExtraLight",
@@ -62,7 +62,6 @@ class BuildJob(TypedDict):
 	base: str
 	cjk: str
 	quotes: NotRequired[str]
-	alternate: NotRequired[str]
 	italic: bool
 	codepoints: list[int]
 	slanted_codepoints: list[int]

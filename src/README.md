@@ -65,7 +65,7 @@ uv run --project src python src/main.py --reuse-outlines
 | `-`、`…` | 仅沿垂直方向平移，使轮廓中心与同一家族、同一样式的`>`对齐，保留形状和步进 |
 | Sans的`‘’“”` | 使用匹配字重、字宽和样式的Noto Serif轮廓与步进 |
 | Mono的`‘’“”` | 使用Noto Serif轮廓，在Mono字格内居中，必要时横向压缩并设置Mono步进 |
-| 三个家族的`—` | 保留匹配字重、字宽和样式的来源横线与步进，在轮廓中心添加突出横线的实心圆；Mono沿用Noto Sans来源，不强制压缩到Mono字格 |
+| 三个家族的`—` | 分别保留匹配字重、字宽和样式的Noto Sans、Noto Sans Mono、Noto Serif横线与步进，在轮廓中心添加突出横线的实心圆；Mono保持等宽步进 |
 
 点零的句点按需等比缩小：根据圆点高度范围内的字腔空间限制尺寸，使窄体和重字重的点仍与侧壁分离。内外轮廓不会因加点而缩放
 
@@ -103,7 +103,7 @@ Sans和Serif的Italic点零直接使用各自的原生Italic零和句点。只�
 
 独立验证入口为[verification/custom.py](verification/custom.py)中的`check_o`，用fontTools测量实际曲线和填充，核验原生圆环、轮廓方向、空字腔、斜笔长度和端面粗细、斜笔连通、右上留白及步进。命名位置和网格中间位置均执行这些约束
 
-当前`lib.OUTLINE_DESIGN_VERSION`为7，缺少破折号圆点的旧轮廓缓存会被拒绝。后续修改设计时应同步更新生成、独立验证与轮廓版本，并完整重建字体
+当前`lib.OUTLINE_DESIGN_VERSION`为8，Mono破折号借用Sans来源的旧轮廓缓存会被拒绝。后续修改设计时应同步更新生成、独立验证与轮廓版本，并完整重建字体
 
 ## 构建流程与源码
 

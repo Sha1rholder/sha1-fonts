@@ -245,15 +245,23 @@ class ReadmeContractTests(unittest.TestCase):
 					with self.assertRaisesRegex(AssertionError, "Bar full height"):
 						check_bar(patch, base, "old length")
 
-	def test_mono_em_dash_uses_sans(self):
-		"""确认Mono显式提供Sans破折号并拒绝等宽来源"""
+	def test_mono_em_dash_uses_mono(self):
+		"""确认Mono保留本家族破折号及等宽步进并拒绝Sans来源"""
 		with (
 			regular_instance(font_path(FAMILIES["mono"])) as patch,
-			regular_instance(variable_path("Noto_Sans")) as source,
-			regular_instance(variable_path("Noto_Sans_Mono")) as wrong,
+			regular_instance(variable_path("Noto_Sans_Mono")) as source,
+			regular_instance(variable_path("Noto_Sans")) as wrong,
 		):
 			check_em_dash(patch, source, "regular")
 			name = best_cmap(patch)[0x2014]
+			metrics = patch["hmtx"][name]
+			patch["hmtx"][name] = (
+				wrong["hmtx"][best_cmap(wrong)[0x2014]][0],
+				metrics[1],
+			)
+			with self.assertRaisesRegex(AssertionError, "Em dash advance"):
+				check_em_dash(patch, source, "wrong em dash advance")
+			patch["hmtx"][name] = metrics
 			dot = contour_glyph(patch["glyf"][name], 1)
 			pen = TTGlyphPen(None)
 			wrong["glyf"][best_cmap(wrong)[0x2014]].draw(pen, wrong["glyf"])
@@ -269,11 +277,7 @@ class ReadmeContractTests(unittest.TestCase):
 				with (
 					self.subTest(family=key, italic=italic),
 					regular_instance(font_path(config, italic)) as patch,
-					regular_instance(
-						variable_path(
-							"Noto_Sans" if key == "mono" else config["source"], italic
-						)
-					) as base,
+					regular_instance(variable_path(config["source"], italic)) as base,
 				):
 					check_em_dash(patch, base, "regular")
 					replace_glyph(patch, base, 0x2014)

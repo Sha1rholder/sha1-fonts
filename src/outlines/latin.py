@@ -188,18 +188,14 @@ def flag_one(glyph, angle, family):
 	glyph.width = width
 
 
-def patch_latin(target, base, cjk, quotes, alternate, job: BuildJob) -> None:
+def patch_latin(target, base, cjk, quotes, job: BuildJob) -> None:
 	"""按家族选择拉丁补丁供体并执行对应修改"""
 	for codepoint in (0x2D, 0x2026):
 		transforms.align_middle(
 			transforms.copy_glyph(target, base, codepoint), base[0x3E]
 		)
 	mark_bar(transforms.copy_glyph(target, base, 0x7C), base)
-	mark_em_dash(
-		transforms.copy_glyph(
-			target, alternate if job["family"] == "mono" else base, 0x2014
-		)
-	)
+	mark_em_dash(transforms.copy_glyph(target, base, 0x2014))
 	dot_zero(transforms.copy_glyph(target, base, 0x30), base[0x2E])
 	flag_one(
 		transforms.copy_glyph(target, base, 0x31), job["italic_angle"], job["family"]

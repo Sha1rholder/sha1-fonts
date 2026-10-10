@@ -24,11 +24,6 @@ def check_intermediate(
 	source = subset_font(
 		variable_path(config["source"], jobs[0]["italic"]), (0x31, 0x4F, 0x7C, 0x2014)
 	)
-	dash_source = (
-		subset_font(variable_path("Noto_Sans"), (0x2014,))
-		if jobs[0]["family"] == "mono"
-		else source
-	)
 	count = 0
 	for low, high in pairwise(weights):
 		for narrow, wide in pairwise(widths):
@@ -77,19 +72,12 @@ def check_intermediate(
 				latin.check_bar(instance, base, position)
 				if 0x31 in best_cmap(instance):
 					latin.check_one(instance, base, jobs[0]["family"], position)
-			with instantiateVariableFont(
-				dash_source,
-				{"wght": (low + high) / 2, "wdth": (narrow + wide) / 2},
-				inplace=False,
-			) as dash_base:
-				latin.check_em_dash(instance, dash_base, position)
+				latin.check_em_dash(instance, base, position)
 			instance.close()
 			count += 1
 	for master in masters.values():
 		master.close()
 	source.close()
-	if dash_source is not source:
-		dash_source.close()
 	return count
 
 
