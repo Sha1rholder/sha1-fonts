@@ -13,11 +13,7 @@ uv run --project src python src/main.py
 uv run --project src python -m unittest discover -s src/tests -t src
 ```
 
-构建需要Python3.14+、`uv`和带Python脚本支持的FontForge。构建进程调用`PATH`中的`fontforge`，普通Python环境只需安装fontTools，无需安装FontForge的Python模块
-
-本次使用FontForge20251009和fontTools4.65.0完成构建与验证，Python依赖锁定于[uv.lock](uv.lock)
-
-完整构建会自动验证生成字体。也可单独验证已有产物，或复用兼容的轮廓缓存重新合成字体：
+构建需要`uv 0.13.0`以上和带Python脚本支持的FontForge。构建进程调用`PATH`中的`fontforge`，普通Python环境只需安装fontTools，无需安装FontForge的Python模块
 
 ```sh
 uv run --project src python src/main.py verify

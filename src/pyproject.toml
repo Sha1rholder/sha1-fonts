@@ -2,7 +2,7 @@
 name = "sha1-fonts"
 version = "0.1.0"
 description = "Minimal Noto-derived variable font patches built with FontForge"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = ["fonttools"]
 
 [tool.uv]
