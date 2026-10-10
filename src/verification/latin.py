@@ -14,6 +14,7 @@ from .geometry import (
 	bounds,
 	check_source_contour,
 	check_source_points,
+	contour_area,
 	contour_bounds,
 	contour_glyph,
 	ink_at,
@@ -328,21 +329,42 @@ def check_zero(font, base, family, position):
 		)
 
 
-def check_mono_dash(font, alternate, position):
-	"""核对等宽系列的破折号完整保留Sans的轮廓和步进"""
+def check_em_dash(font, base, position):
+	"""核对破折号保留来源横线及步进且中央圆点实心、突出横线"""
 	cp = 0x2014
 	glyph = font["glyf"][best_cmap(font)[cp]]
-	source = alternate["glyf"][best_cmap(alternate)[cp]]
+	source = base["glyf"][best_cmap(base)[cp]]
 	require(
-		glyph.numberOfContours == source.numberOfContours
-		and len(glyph.coordinates) == len(source.coordinates),
-		f"Mono em dash topology: {position}",
+		glyph.numberOfContours == source.numberOfContours + 1,
+		f"Em dash contour count: {position}",
 	)
-	check_source_points(glyph, source)
+	for index in range(source.numberOfContours):
+		check_source_contour(contour_glyph(glyph, index), contour_glyph(source, index))
+	dot_index = source.numberOfContours
+	dot = contour_bounds(glyph, dot_index)
+	left, bottom, right, top = bounds(base, cp)
+	x, y = (left + right) / 2, (bottom + top) / 2
 	require(
-		font["hmtx"][best_cmap(font)[cp]][0]
-		== alternate["hmtx"][best_cmap(alternate)[cp]][0],
-		f"Mono em dash advance: {position}",
+		abs(dot[0] + dot[2] - 2 * x) <= 1.1 and abs(dot[1] + dot[3] - 2 * y) <= 1.1,
+		f"Em dash dot center: {position}",
+	)
+	require(dot[1] < bottom and dot[3] > top, f"Invisible em dash dot: {position}")
+	radius_x, radius_y = (dot[2] - dot[0]) / 2, (dot[3] - dot[1]) / 2
+	require(
+		abs(radius_x - radius_y) <= 1.1
+		and abs(contour_area(glyph, dot_index) - math.pi * radius_x * radius_y)
+		<= math.pi * radius_x * radius_y * 0.05,
+		f"Em dash dot shape: {position}",
+	)
+	for offset in (-0.75, 0.75):
+		require(
+			ink_at(font, cp, x, y + offset * radius_y),
+			f"Missing solid em dash dot: {position}",
+		)
+	require(
+		abs(font["hmtx"][best_cmap(font)[cp]][0] - base["hmtx"][best_cmap(base)[cp]][0])
+		<= 1,
+		f"Em dash advance: {position}",
 	)
 
 

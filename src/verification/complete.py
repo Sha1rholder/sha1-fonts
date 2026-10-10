@@ -92,6 +92,7 @@ def _require_source_samples(
 	patch_codepoint = next(iter(patch_codepoints(config, italic)))
 	_sample_matches(complete_path, patch_path, patch_codepoint, config, italic)
 	_sample_matches(complete_path, patch_path, 0x31, config, italic)
+	_sample_matches(complete_path, patch_path, 0x2014, config, italic)
 	_sample_matches(complete_path, base_path, 0x41, config, italic, tolerance=1)
 	if not italic:
 		_sample_matches(

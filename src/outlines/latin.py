@@ -68,6 +68,13 @@ def mark_bar(glyph, base):
 	glyph.foreground += geometry.circle(center_x, center_y, radius)
 
 
+def mark_em_dash(glyph):
+	"""保留破折号原横线和步进并添加突出横线的居中实心圆"""
+	left, bottom, right, top = glyph.boundingBox()
+	radius = min(max(16, (top - bottom) * 0.9), glyph.width * 0.4)
+	glyph.foreground += geometry.circle((left + right) / 2, (bottom + top) / 2, radius)
+
+
 def trim_mono_l(glyph):
 	"""收回小写l的左下横脚并保留右侧横脚和原字宽"""
 	layer = glyph.foreground
@@ -188,6 +195,11 @@ def patch_latin(target, base, cjk, quotes, alternate, job: BuildJob) -> None:
 			transforms.copy_glyph(target, base, codepoint), base[0x3E]
 		)
 	mark_bar(transforms.copy_glyph(target, base, 0x7C), base)
+	mark_em_dash(
+		transforms.copy_glyph(
+			target, alternate if job["family"] == "mono" else base, 0x2014
+		)
+	)
 	dot_zero(transforms.copy_glyph(target, base, 0x30), base[0x2E])
 	flag_one(
 		transforms.copy_glyph(target, base, 0x31), job["italic_angle"], job["family"]
@@ -196,7 +208,6 @@ def patch_latin(target, base, cjk, quotes, alternate, job: BuildJob) -> None:
 		transforms.copy_glyph(target, cjk, 0x6C)
 	if job["family"] == "mono":
 		trim_mono_l(transforms.copy_glyph(target, base, 0x6C))
-		transforms.copy_glyph(target, alternate, 0x2014)
 	if quotes is not None:
 		for codepoint in (0x2018, 0x2019, 0x201C, 0x201D):
 			glyph = transforms.copy_glyph(target, quotes, codepoint)

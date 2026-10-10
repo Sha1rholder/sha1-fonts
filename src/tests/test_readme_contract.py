@@ -11,8 +11,8 @@ from fontTools.varLib.instancer import instantiateVariableFont
 
 from lib import FAMILIES, font_path, italic_styles, subset_font, variable_path
 from verification.custom import check_o
-from verification.geometry import best_cmap, bounds
-from verification.latin import check_bar, check_mono_dash, check_one, check_zero
+from verification.geometry import best_cmap, bounds, contour_glyph
+from verification.latin import check_bar, check_em_dash, check_one, check_zero
 
 
 def regular_instance(path):
@@ -252,10 +252,48 @@ class ReadmeContractTests(unittest.TestCase):
 			regular_instance(variable_path("Noto_Sans")) as source,
 			regular_instance(variable_path("Noto_Sans_Mono")) as wrong,
 		):
-			check_mono_dash(patch, source, "regular")
-			replace_glyph(patch, wrong, 0x2014)
+			check_em_dash(patch, source, "regular")
+			name = best_cmap(patch)[0x2014]
+			dot = contour_glyph(patch["glyf"][name], 1)
+			pen = TTGlyphPen(None)
+			wrong["glyf"][best_cmap(wrong)[0x2014]].draw(pen, wrong["glyf"])
+			dot.draw(pen, patch["glyf"])
+			patch["glyf"][name] = pen.glyph()
 			with self.assertRaises(AssertionError):
-				check_mono_dash(patch, source, "wrong em dash")
+				check_em_dash(patch, source, "wrong em dash")
+
+	def test_em_dashes_have_center_dots(self):
+		"""核验五个样式的破折号并拒绝没有圆点的原生轮廓"""
+		for key, config in FAMILIES.items():
+			for italic in italic_styles(key):
+				with (
+					self.subTest(family=key, italic=italic),
+					regular_instance(font_path(config, italic)) as patch,
+					regular_instance(
+						variable_path(
+							"Noto_Sans" if key == "mono" else config["source"], italic
+						)
+					) as base,
+				):
+					check_em_dash(patch, base, "regular")
+					replace_glyph(patch, base, 0x2014)
+					with self.assertRaisesRegex(
+						AssertionError, "Em dash contour count"
+					):
+						check_em_dash(patch, base, "missing dot")
+
+	def test_em_dash_rejects_shifted_dot(self):
+		"""拒绝圆点偏离横线中心"""
+		with (
+			regular_instance(font_path(FAMILIES["sans"])) as patch,
+			regular_instance(variable_path("Noto_Sans")) as base,
+		):
+			glyph = patch["glyf"][best_cmap(patch)[0x2014]]
+			for index in range(glyph.endPtsOfContours[-2] + 1, len(glyph.coordinates)):
+				x, y = glyph.coordinates[index]
+				glyph.coordinates[index] = (x + 20, y)
+			with self.assertRaisesRegex(AssertionError, "Em dash dot center"):
+				check_em_dash(patch, base, "shifted dot")
 
 	def test_mono_has_no_italic_release(self):
 		"""确认Mono没有斜体发布配置且保留点零与破折号覆盖"""

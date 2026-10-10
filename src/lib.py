@@ -21,7 +21,7 @@ def release_version(number: str) -> str:
 
 EPOCH = 3856896000
 VERSION = release_version(os.environ.get("SHA1_RELEASE_NUMBER", "0"))
-OUTLINE_DESIGN_VERSION = 6
+OUTLINE_DESIGN_VERSION = 7
 WEIGHTS = {
 	100: "Thin",
 	200: "ExtraLight",
@@ -90,11 +90,22 @@ FAMILIES: dict[str, FamilyConfig] = {
 			0x4F,
 			0x6C,
 			0x7C,
+			0x2014,
 			0x2026,
 			*QUOTES,
 			*PUNCTUATION,
 		),
-		"italic_codepoints": (0x2D, 0x30, 0x31, 0x4F, 0x6C, 0x7C, 0x2026, *QUOTES),
+		"italic_codepoints": (
+			0x2D,
+			0x30,
+			0x31,
+			0x4F,
+			0x6C,
+			0x7C,
+			0x2014,
+			0x2026,
+			*QUOTES,
+		),
 	},
 	"mono": {
 		"patch": "Sha1 Sans Mono Patch",
@@ -122,8 +133,8 @@ FAMILIES: dict[str, FamilyConfig] = {
 		"source": "Noto_Serif",
 		"cjk": "Noto_Serif_SC",
 		"minimum": 200,
-		"codepoints": (0x2D, 0x30, 0x31, 0x4F, 0x7C, 0x2026, *PUNCTUATION),
-		"italic_codepoints": (0x2D, 0x30, 0x31, 0x4F, 0x7C, 0x2026),
+		"codepoints": (0x2D, 0x30, 0x31, 0x4F, 0x7C, 0x2014, 0x2026, *PUNCTUATION),
+		"italic_codepoints": (0x2D, 0x30, 0x31, 0x4F, 0x7C, 0x2014, 0x2026),
 	},
 }
 
