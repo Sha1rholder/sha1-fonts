@@ -21,8 +21,9 @@
 		<header class="masthead">
 			<a class="wordmark" href="#">Sha1<span>字体</span></a>
 			<nav aria-label="页面导航">
+				<a href="#programming">编程</a>
+				<a href="#writing">写作</a>
 				<a href="#try">试用</a>
-				<a href="#details">字形</a>
 				<a href="#get">获取</a>
 				<label class="theme-label">外观
 					<select id="theme" aria-label="页面外观">
@@ -39,7 +40,7 @@
 				<div>
 					<p class="eyebrow">NOTO基础 · SHA1补丁</p>
 					<h1 id="title">中英混排，<br>清楚相处</h1>
-					<p class="intro">在Noto系列的设计原则上，让字符各自清楚，也彼此协调</p>
+					<p class="intro">延续Noto系列的设计原则，让代码里的符号和文稿里的标点各自清楚，也彼此协调</p>
 					<p class="principles">无歧义<span aria-hidden="true">／</span>协调<span aria-hidden="true">／</span>易辨认</p>
 				</div>
 				<div class="hero-proof">
@@ -51,14 +52,91 @@
 				</div>
 			</section>
 
+			<section id="programming" class="scene-section" aria-labelledby="programming-title">
+				<div class="section-heading">
+					<h2 id="programming-title"><span class="section-number">01</span>编程：看清字符，读顺结构</h2>
+					<p>Sha1 Mono对照Noto Sans Mono＋Noto Sans SC</p>
+				</div>
+				<p class="scene-intro">标识符、运算符和中文注释经常挤在同一行里。保留Noto的等宽节奏，只在易混淆的轮廓与符号的位置上做调整，让每个字符都能被准确读出</p>
+				<p class="scene-note">两侧使用相同的文字、字号与字重，所有样本均关闭连字</p>
+
+				<article class="scene-example">
+					<div class="example-copy"><h3><code>-&gt;</code>，两笔也能对齐</h3><p>把连字符抬到<code>&gt;</code>的中线，两笔在垂直方向上对齐。函数的返回类型、注释中的流程，都能保持顺畅的视觉走向，无需连字</p></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="fn read() -&gt; String&#10;// 文件 -&gt; 文本 -&gt; 字符"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="fn read() -&gt; String&#10;// 文件 -&gt; 文本 -&gt; 字符"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="scene-example">
+					<div class="example-copy"><h3>订单号里的<code>O</code>与<code>0</code></h3><p>字母O使用独立轮廓，数字0使用点零。复制订单号、读端口号或排查日志时，轮廓和中间的点一起给出辨认依据</p></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="orderID = &quot;O0O0&quot;;&#10;retry = 0; // 第0次重试"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="orderID = &quot;O0O0&quot;;&#10;retry = 0; // 第0次重试"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="scene-example">
+					<div class="example-copy"><h3>参数的<code>-</code>，注释的<code>—</code></h3><p>连字符保持短横，破折号在中间加入实心小圆点。命令参数与自然语言里的停顿，即使出现在同一段代码里，也有不同的视觉标记</p></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="tool -n  # 预演&#10;# 预演—不会写入文件"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="tool -n  # 预演&#10;# 预演—不会写入文件"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="scene-example punctuation-example">
+					<div class="example-copy"><h3>全角，还是半角＋空格？</h3><p><strong>空白相近，字符不同</strong>。全角冒号、分号、叹号与问号使用空心圆点，逗号调整重量和位置，全角括号加入短横。从字形辨认标点，减少把中文符号误当代码语法的机会</p><p class="example-note">每组上行在句中半角标点后加空格，下行使用全角标点且没有额外空格；下方的全角调用不能直接作为代码执行</p></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="键: 值; 重试? 是!&#10;键：值；重试？是！&#10;call(a, b)&#10;call（a，b）"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="键: 值; 重试? 是!&#10;键：值；重试？是！&#10;call(a, b)&#10;call（a，b）"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="scene-example">
+					<div class="example-copy"><h3>逐字读出<code>I l 1 7</code></h3><p>I保留上下横梁，l去掉左下横，1加入实心三角旗头，7保留斜笔。相似字符各有线索，标识符与数组下标也更容易逐字核对</p></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="let Il17 = [1, 7];&#10;index = Il17[1];"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="let Il17 = [1, 7];&#10;index = Il17[1];"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="scene-example">
+					<div class="example-copy"><h3>让上下两行的<code>|</code>接起来</h3><p>竖线延伸至字体的完整高度，中间的小圆点标识它是符号。在紧凑行距下，同一列的竖线上下相接，终端输出的层次能连贯地读下去</p><p class="example-note">这组使用相同的紧凑行距；连接观感随编辑器行距而变化</p></div>
+					<div class="specimen code-specimen pipe-specimen" data-family="mono" data-kind="noto" data-text="  | 读取配置&#10;  | 校验字段&#10;  | 写入结果"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen pipe-specimen" data-family="mono" data-kind="patch" data-text="  | 读取配置&#10;  | 校验字段&#10;  | 写入结果"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+			</section>
+
+			<section id="writing" class="scene-section" aria-labelledby="writing-title">
+				<div class="section-heading">
+					<h2 id="writing-title"><span class="section-number">02</span>写作：标点也参与表达</h2>
+					<p>在Sans与Serif中，读清引语、停顿与汉字</p>
+				</div>
+				<p class="scene-intro">中英文切换时，引号的方向、省略号的高度和横线的身份，都影响一句话的阅读。保留正文的节奏，让标点在需要辨认的地方提供清楚的线索</p>
+				<p class="scene-note">Sans原版：Noto Sans＋Noto Sans SC · Serif原版：Noto Serif＋Noto Serif SC</p>
+				<article class="scene-example writing-example">
+					<div class="example-copy"><h3>分清引号的开合</h3><p>中文书面弯引号应有Noto Serif这样明确的开合方向。Sha1 Sans采用它的<code>‘’“”</code>，同时保留适合英文的字宽，避免直接使用Noto Sans SC引号时，给英文引语带来过宽的字长</p><p class="example-note">Sha1 Serif沿用Noto Serif原有的引号设计；嵌套的中文引语与英文引语，在两种场景下保持协调</p></div>
+					<div class="scene-pairs">
+						<div class="specimen writing-specimen" data-family="sans" data-kind="noto" data-text="“‘明天’就是周一？”&#10;‘Tomorrow’ or ‘Monday’?"><span class="sample-label">Noto Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="sans" data-kind="patch" data-text="“‘明天’就是周一？”&#10;‘Tomorrow’ or ‘Monday’?"><span class="sample-label">Sha1 Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="noto" data-text="“‘明天’就是周一？”&#10;‘Tomorrow’ or ‘Monday’?"><span class="sample-label">Noto Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="patch" data-text="“‘明天’就是周一？”&#10;‘Tomorrow’ or ‘Monday’?"><span class="sample-label">Sha1 Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					</div>
+				</article>
+				<article class="scene-example writing-example">
+					<div class="example-copy"><h3>一个<code>…</code>，三个<code>...</code></h3><p>话未说完的停顿，与需要逐字抄录的文件名，使用不同的字符。省略号抬到符号中线，三个句点保持在基线附近，让<code>…</code>与<code>...</code>一眼可分</p></div>
+					<div class="scene-pairs">
+						<div class="specimen writing-specimen" data-family="sans" data-kind="noto" data-text="Wait…让我把话说完&#10;文件名：notes...txt"><span class="sample-label">Noto Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="sans" data-kind="patch" data-text="Wait…让我把话说完&#10;文件名：notes...txt"><span class="sample-label">Sha1 Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="noto" data-text="Wait…让我把话说完&#10;文件名：notes...txt"><span class="sample-label">Noto Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="patch" data-text="Wait…让我把话说完&#10;文件名：notes...txt"><span class="sample-label">Sha1 Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					</div>
+				</article>
+				<article class="scene-example writing-example">
+					<div class="example-copy"><h3>汉字<code>一</code>，破折号<code>—</code></h3><p>“一”保持原来的汉字字形，破折号加入实心小圆点。在章节标题与中英混排的短句里，横线承担的不同含义能从字形直接辨认</p></div>
+					<div class="scene-pairs">
+						<div class="specimen writing-specimen" data-family="sans" data-kind="noto" data-text="第一章—从一开始&#10;One—one step at a time."><span class="sample-label">Noto Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="sans" data-kind="patch" data-text="第一章—从一开始&#10;One—one step at a time."><span class="sample-label">Sha1 Sans</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="noto" data-text="第一章—从一开始&#10;One—one step at a time."><span class="sample-label">Noto Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+						<div class="specimen writing-specimen" data-family="serif" data-kind="patch" data-text="第一章—从一开始&#10;One—one step at a time."><span class="sample-label">Sha1 Serif</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					</div>
+				</article>
+			</section>
+
 			<section id="try" class="try-section" aria-labelledby="try-title">
 				<div class="section-heading">
-					<h2 id="try-title"><span class="section-number">01</span>用自己的文字，看看区别</h2>
+					<h2 id="try-title"><span class="section-number">03</span>换成你的代码或文稿</h2>
 					<p>同一段文字，三个家族，原版与补丁并排比较</p>
 				</div>
 				<label class="input-label" for="test-text">试用文字<span>仅在你的浏览器中处理</span></label>
-				<textarea id="test-text" rows="3" spellcheck="false">他说：“Hello，世界！”编号O0、Il1与7；路径A->B，价格1,000.00元（含税）
-I said: 'It's done...' | 他说：‘没问题；完美……！’</textarea>
+				<textarea id="test-text" rows="3" spellcheck="false">let orderID = "O0-Il17"; // 第1笔订单
+第一章—从一开始
+“‘明天’就是周一？”</textarea>
 				<div class="controls">
 					<label for="font-size">字号<output id="size-value" for="font-size">28px</output><input id="font-size" type="range" min="16" max="64" value="28" step="1"></label>
 					<label for="font-weight">字重<output id="weight-value" for="font-weight">400</output><input id="font-weight" type="range" min="200" max="900" value="400" step="1"></label>
@@ -98,25 +176,6 @@ I said: 'It's done...' | 他说：‘没问题；完美……！’</textarea>
 						<span class="mobile-label">Sha1补丁</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
 					</div>
 				</div>
-			</section>
-
-			<section id="details" class="details-section" aria-labelledby="details-title">
-				<div class="section-heading">
-					<h2 id="details-title"><span class="section-number">02</span>改动很少，区别很清楚</h2>
-					<p>保留Noto的字形基础，把注意力放在容易看错的地方</p>
-				</div>
-				<article class="detail-row">
-					<div><h3>无歧义</h3><p>数字1有实心三角旗头，0使用点零，O有独立轮廓；满高竖线以圆点标识，帮助区分字母、数字与符号</p></div>
-					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text="I l 1 7 |   O 0"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-				</article>
-				<article class="detail-row">
-					<div><h3>协调</h3><p>中文冒号、分号、叹号和问号使用空心圆点；调整视觉重量与位置，让中英文标点同处一行，也能分清</p></div>
-					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text=":： ;； !！ ?？"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-				</article>
-				<article class="detail-row">
-					<div><h3>易辨认</h3><p>中文括号收紧外侧空白并加入短横；调整连字符与省略号的高度，破折号加入圆点，不开启连字也能清楚阅读</p></div>
-					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text="（中文）(English) -> … —"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-				</article>
 			</section>
 
 			<section id="get" class="get-section" aria-labelledby="get-title">
