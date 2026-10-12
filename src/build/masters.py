@@ -14,7 +14,6 @@ from fontTools.ttLib.tables.ttProgram import Program
 import lib as sources
 from lib import (
 	EPOCH,
-	VERSION,
 	BuildJob,
 	FamilyConfig,
 	patch_codepoints,
@@ -83,10 +82,9 @@ def master_font(job: BuildJob, config: FamilyConfig, original: TTFont) -> TTFont
 			"styleName": style,
 			"typographicFamily": family,
 			"typographicSubfamily": style,
-			"uniqueFontIdentifier": f"{VERSION};SHA1;{ps_name}",
+			"uniqueFontIdentifier": f"SHA1;{ps_name}",
 			"fullName": f"{family} {style}",
 			"psName": ps_name,
-			"version": f"Version {VERSION}",
 			"copyright": sources.copyright_text(),
 			"manufacturer": "Sha1 font contributors",
 			"description": "Minimal Noto-derived glyph patches. Built with FontForge and fontTools.",
@@ -119,7 +117,7 @@ def master_font(job: BuildJob, config: FamilyConfig, original: TTFont) -> TTFont
 	head = cast(Any, fb.font["head"])
 	head.created = EPOCH
 	head.modified = EPOCH
-	head.fontRevision = float(VERSION)
+	head.fontRevision = 0
 	head.macStyle = 2 if italic else 0
 	fb.font.recalcTimestamp = False
 	return fb.font

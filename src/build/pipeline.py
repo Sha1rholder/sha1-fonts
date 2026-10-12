@@ -16,7 +16,6 @@ from lib import (
 	PATCH,
 	ROOT,
 	TEMP,
-	VERSION,
 	BuildJob,
 	italic_styles,
 )
@@ -96,7 +95,6 @@ def build_fonts(reuse_outlines: bool = False) -> None:
 	if before != sources.source_hashes():
 		raise RuntimeError("An original source file changed during the build")
 	manifest = {
-		"version": VERSION,
 		"fontforge_version": (TEMP / "fontforge-version.txt")
 		.read_text(encoding="ascii")
 		.strip(),

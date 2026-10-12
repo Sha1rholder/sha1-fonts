@@ -1,0 +1,103 @@
+name: Build and deploy website
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'web/**'
+      - 'src/**'
+      - 'Noto/**'
+      - '.gitattributes'
+      - '.github/workflows/pages.yml'
+  pull_request:
+    paths:
+      - 'web/**'
+      - 'src/**'
+      - 'Noto/**'
+      - '.gitattributes'
+      - '.github/workflows/pages.yml'
+  workflow_run:
+    workflows: [Build and release]
+    branches: [master]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out sources and LFS fonts
+        uses: actions/checkout@v7
+        with:
+          lfs: true
+          persist-credentials: false
+
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: 0.13.0
+          python-version: "3.15"
+          enable-cache: true
+          cache-dependency-glob: src/uv.lock
+
+      - name: Install 7-Zip
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y 7zip
+
+      - name: Install locked Python dependencies
+        run: uv sync --frozen --project src --extra web
+
+      - name: Download latest released Patch fonts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release download --pattern Sha1-Patch.7z --dir temp/pages-release
+          archiver=$(command -v 7zz || command -v 7z)
+          "$archiver" x temp/pages-release/Sha1-Patch.7z -y
+
+      - name: Build website
+        run: uv run --frozen --project src --extra web python web/build.py
+
+      - name: Verify website assets
+        run: uv run --frozen --project src --extra web python -m unittest discover -s web/tests
+
+      - name: Configure Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        uses: actions/configure-pages@v6
+
+      - name: Upload website
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

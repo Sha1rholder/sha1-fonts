@@ -2,7 +2,7 @@
 
 字形需求以[根目录README](../README.md)为准，本文记录实现、构建和验证方式
 
-字体版本在构建时由`SHA1_RELEASE_NUMBER`传入：发布工作流的第`N`次运行生成字体版本`N.000`和Release标签`vN`，本地构建默认版本为`0.000`。自定义艺术字`O`和原生Italic样式以根目录README为准
+发布工作流的第`N`次运行使用Release标签`vN`，字体、构建清单和验证报告不嵌入发布编号。字体格式必需的`head.fontRevision`固定为0。自定义艺术字`O`和原生Italic样式以根目录README为准
 
 ## 快速开始
 
@@ -21,6 +21,8 @@ uv run --project src python src/main.py --reuse-outlines
 ```
 
 中间供体、轮廓JSON、任务文件和FontForge日志位于`temp/build/`。轻量补丁位于`Sha1/patch/`，完整字体位于`Sha1/complete/`，清单、验证报告和派生字体许可证分别位于`Sha1/manifest.json`、`Sha1/verification.json`和`Sha1/OFL.txt`
+
+发布CI构建并验证后，直接计算Patch、完整字体和许可证的文件SHA-256，与GitHub latest release比较；文件集合、字体内容和许可证均未变化时跳过新Release。没有正式Release时正常发布，下载或比较失败时终止流程
 
 缓存任务包含`outline_design_version`。字符集、构造斜体列表、轮廓设计版本或标点参数不匹配时，复用构建和单独验证都会拒绝旧缓存，需运行一次完整构建
 
@@ -127,12 +129,12 @@ flowchart TD
 
 FontForge导出原始二次曲线节点，fontTools按相同点序构建TrueType母版，拒绝拓扑不一致的母版，再生成`fvar`、`gvar`、`HVAR`和`STAT`。命名位置与各自母版一致，中间位置采用相邻网格的双线性插值
 
-重叠轮廓保留TrueType重叠标志，字体不含提示信息。原始Noto文件和许可证保持不变，派生字体使用Sha1家族和PostScript名称，`name`表版本与`head.fontRevision`均记录传入的发布版本。单独验证时从构建清单读取版本
+重叠轮廓保留TrueType重叠标志，字体不含提示信息。原始Noto文件和许可证保持不变，派生字体使用Sha1家族和PostScript名称。`name`表不包含版本字符串，唯一标识不嵌入发布编号，`head.fontRevision`固定为0；单独验证也检查这些约束
 
 | 模块 | 负责内容 |
 | --- | --- |
 | [main.py](main.py) | 构建、单独验证和FontForge任务入口 |
-| [lib.py](lib.py) | 家族、字符集、版本、路径、来源实例和许可证 |
+| [lib.py](lib.py) | 家族、字符集、路径、来源实例和许可证 |
 | [build/jobs.py](build/jobs.py)、[build/pipeline.py](build/pipeline.py) | 供体选择、缓存校验和构建编排 |
 | [build/masters.py](build/masters.py)、[build/family.py](build/family.py)、[build/variations.py](build/variations.py) | 补丁母版、拓扑、可变字体和插值差分 |
 | [build/complete.py](build/complete.py) | 叠加Patch、补入SC字形并重定基准SC字重差分 |

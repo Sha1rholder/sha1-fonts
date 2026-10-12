@@ -1,6 +1,6 @@
 # Sha1展示网页
 
-独立的静态展示页，不修改开发者使用的根目录预览，也不配置部署CI
+独立的静态展示页，不修改开发者使用的根目录预览
 
 页面先按编程、写作两个场景展示原版Noto与Sha1的对照，再提供自由输入。编程样本使用Mono，覆盖箭头、易混淆字母与数字、全角标点和竖线；写作样本同时使用Sans与Serif，展示引号、省略号与破折号。所有固定样本关闭连字并使用相同的对照排版，竖线示例单独采用紧凑行距
 
@@ -18,11 +18,17 @@ uv run --project src python -m http.server 8766 --bind 127.0.0.1 --directory dis
 
 修改HTML、CSS或JS后重新运行网页构建。字体子集缓存位于`temp/web-fonts/`，按来源文件、字符集和fontTools版本复用；生成的`dist/`和缓存不提交Git
 
-整个`dist/`可直接交给静态托管服务。页面和字体使用相对路径，兼容GitHub Pages项目子路径，许可证在`dist/licenses/`。部署须待网页审阅通过后处理
+整个`dist/`可直接交给静态托管服务。页面和字体使用相对路径，兼容GitHub Pages项目子路径，许可证在`dist/licenses/`
+
+## 自动部署
+
+[Pages工作流](../.github/workflows/pages.yml)在`master`分支的网页、构建代码、Noto来源字体或工作流更新后，从GitHub latest release下载`Sha1-Patch.7z`，构建网页、验证网页资产，并将`dist/`部署到GitHub Pages。字体发布工作流成功结束后也会更新网页。PR执行相同的下载、构建与验证，但不部署；也可从Actions页面手动触发，只有`master`分支会部署
+
+首次使用需在仓库Settings → Pages → Build and deployment中将Source设为GitHub Actions
 
 ## 字体加载
 
-- Patch始终来自当前本地构建，不使用完整Sha1字体
+- 部署时Patch来自GitHub latest release，本地预览可使用本地构建，不使用完整Sha1字体
 - Noto保留可变轴，基础子集覆盖固定样本、默认输入和ASCII，其余按256码位区间生成独立WOFF2
 - 字体清单记录真实cmap覆盖、轴范围、每个资源的字节数和本地字体名，不通过字体加载API的成功结果推测缺字情况
 - 本地Noto先检查每个可变轴的实际轮廓变化，再复用一份按需加载的检测字体，通过不同度量检查当前字符覆盖；静态版、未命中和缺字均使用同源子集

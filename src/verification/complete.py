@@ -15,10 +15,10 @@ from lib import (
 )
 
 from .geometry import best_cmap, require
-from .metadata import check_version
+from .metadata import check_release_metadata
 
 
-def verify_complete_family(config: FamilyConfig, italic: bool, version: str) -> dict:
+def verify_complete_family(config: FamilyConfig, italic: bool) -> dict:
 	"""核验完整字体覆盖、元数据及三类来源在变量轴上的结果"""
 	path = complete_font_path(config, italic)
 	with (
@@ -33,7 +33,7 @@ def verify_complete_family(config: FamilyConfig, italic: bool, version: str) -> 
 					expected.setdefault(codepoint, name)
 			expected.update(best_cmap(patch))
 		_require_metadata(complete, config, italic)
-		check_version(complete, version, config["complete"])
+		check_release_metadata(complete, config["complete"])
 		require(
 			set(best_cmap(complete)) == set(expected),
 			f"Complete coverage: {config['complete']} {italic}",

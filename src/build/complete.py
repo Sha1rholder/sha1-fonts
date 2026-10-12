@@ -14,7 +14,6 @@ from fontTools.varLib.instancer import instantiateVariableFont
 from lib import (
 	DIST,
 	EPOCH,
-	VERSION,
 	WEIGHTS,
 	WIDTHS,
 	FamilyConfig,
@@ -256,7 +255,7 @@ def _finalize(font: TTFont, config: FamilyConfig, italic: bool) -> None:
 	font.recalcTimestamp = False
 	head = cast(Any, font["head"])
 	head.created = head.modified = EPOCH
-	head.fontRevision = float(VERSION)
+	head.fontRevision = 0
 	for name_id in (1, 2, 3, 4, 5, 6, 16, 17, 25):
 		font["name"].removeNames(name_id)
 	family = config["complete"]
@@ -266,9 +265,8 @@ def _finalize(font: TTFont, config: FamilyConfig, italic: bool) -> None:
 		for name_id, value in (
 			(1, family),
 			(2, style),
-			(3, f"{VERSION};SHA1;{postscript}"),
+			(3, f"SHA1;{postscript}"),
 			(4, f"{family} {style}"),
-			(5, f"Version {VERSION}"),
 			(6, postscript),
 			(16, family),
 			(17, style),

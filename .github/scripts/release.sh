@@ -2,7 +2,7 @@
 set -euo pipefail
 
 release_number=${SHA1_RELEASE_NUMBER:?SHA1_RELEASE_NUMBER is required}
-if [[ ! $release_number =~ ^[1-9][0-9]{0,4}$ ]] || ((release_number > 32767)); then
+if [[ ! $release_number =~ ^[1-9][0-9]*$ ]]; then
 	printf 'Invalid release number: %s\n' "$release_number" >&2
 	exit 1
 fi
@@ -20,9 +20,26 @@ if gh release view "$tag" --json isDraft --jq '.isDraft' >"$release_dir/is-draft
 	fi
 fi
 
-font_version="${release_number}.000"
-jq -e --arg version "$font_version" '.version == $version' Sha1/manifest.json >/dev/null
-jq -e --arg version "$font_version" '.version == $version' Sha1/verification.json >/dev/null
+# 只将没有正式发布记录视为首次发布；API或下载失败必须终止
+latest_tag=$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName --jq '.[0].tagName // empty')
+if [[ -n $latest_tag ]]; then
+	latest_tag=$(gh release view --json tagName --jq '.tagName')
+	previous=$(mktemp -d "$PWD/$release_dir/previous.XXXXXX")
+	archiver=$(command -v 7zz || command -v 7z)
+	gh release download "$latest_tag" \
+		--pattern Sha1-Patch.7z --pattern Sha1-Complete.7z --dir "$previous"
+	for series in Patch Complete; do
+		"$archiver" x "$previous/Sha1-$series.7z" "-o$previous" -y >/dev/null
+	done
+	(cd Sha1 && sha256sum OFL.txt patch/*.ttf complete/*.ttf) >"$release_dir/current-hashes.txt"
+	(cd "$previous/Sha1" && sha256sum OFL.txt patch/*.ttf complete/*.ttf) >"$release_dir/previous-hashes.txt"
+	rm -rf "$previous"
+	if cmp -s "$release_dir/current-hashes.txt" "$release_dir/previous-hashes.txt"; then
+		printf 'Font contents and license match release %s; skipping release\n' "$latest_tag"
+		exit 0
+	fi
+fi
+
 bash .github/scripts/package.sh
 printf 'Version %s, built and verified from commit [%s](%s/%s/commit/%s).\n\nChoose one archive:\n- Sha1-Complete.7z: standalone complete fonts.\n- Sha1-Patch.7z: lightweight patches for use with the Noto font families.\n\nEach archive includes its fonts, OFL license, build manifest, and verification report.\n\nSHA-256 checksums:\n\n```text\n' \
 	"$release_number" "$GITHUB_SHA" "$GITHUB_SERVER_URL" "$GH_REPO" "$GITHUB_SHA" >"$release_dir/notes.md"
