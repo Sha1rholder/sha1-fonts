@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Sha1是基于Noto的轻量字体补丁，让中英混排无歧义、协调、易辨认。在线比较Sans、Mono、Serif，输入自己的文字试用。">
+	<title>Sha1字体 — 中英混排，清楚相处</title>
+	<script>
+		try {
+			const theme = localStorage.getItem("sha1-theme");
+			if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+		} catch {}
+	</script>
+	<link rel="stylesheet" href="style.css">
+	<script src="app.js" defer></script>
+</head>
+<body>
+	<a class="skip-link" href="#try">跳到字体试用</a>
+	<div class="page">
+		<header class="masthead">
+			<a class="wordmark" href="#">Sha1<span>字体</span></a>
+			<nav aria-label="页面导航">
+				<a href="#try">试用</a>
+				<a href="#details">字形</a>
+				<a href="#get">获取</a>
+				<label class="theme-label">外观
+					<select id="theme" aria-label="页面外观">
+						<option value="system">跟随系统</option>
+						<option value="light">亮色</option>
+						<option value="dark">暗色</option>
+					</select>
+				</label>
+			</nav>
+		</header>
+
+		<main>
+			<section class="hero" aria-labelledby="title">
+				<div>
+					<p class="eyebrow">NOTO基础 · SHA1补丁</p>
+					<h1 id="title">中英混排，<br>清楚相处</h1>
+					<p class="intro">在Noto系列的设计原则上，让字符各自清楚，也彼此协调</p>
+					<p class="principles">无歧义<span aria-hidden="true">／</span>协调<span aria-hidden="true">／</span>易辨认</p>
+				</div>
+				<div class="hero-proof">
+					<div class="specimen" data-family="sans" data-kind="patch" data-text="Il17| O0">
+						<p class="load-status" role="status">正在准备字体…</p>
+						<div class="font-sample hero-glyphs" hidden></div>
+					</div>
+					<p class="caption">字母、数字与符号，各有自己的轮廓</p>
+				</div>
+			</section>
+
+			<section id="try" class="try-section" aria-labelledby="try-title">
+				<div class="section-heading">
+					<h2 id="try-title"><span class="section-number">01</span>用自己的文字，看看区别</h2>
+					<p>同一段文字，三个家族，原版与补丁并排比较</p>
+				</div>
+				<label class="input-label" for="test-text">试用文字<span>仅在你的浏览器中处理</span></label>
+				<textarea id="test-text" rows="3" spellcheck="false">他说：“Hello，世界！”编号O0、Il1与7；路径A->B，价格1,000.00元（含税）
+I said: 'It's done...' | 他说：‘没问题；完美……！’</textarea>
+				<div class="controls">
+					<label for="font-size">字号<output id="size-value" for="font-size">28px</output><input id="font-size" type="range" min="16" max="64" value="28" step="1"></label>
+					<label for="font-weight">字重<output id="weight-value" for="font-weight">400</output><input id="font-weight" type="range" min="200" max="900" value="400" step="1"></label>
+					<label for="font-width">字宽<output id="width-value" for="font-width">100%</output><input id="font-width" type="range" min="62.5" max="100" value="100" step="0.5"></label>
+					<label class="italic-control"><input id="italic" type="checkbox">斜体</label>
+					<button id="reset" type="button" class="text-button">重置</button>
+				</div>
+				<p class="control-note">字宽调整拉丁字形，中文保持原有字格<span id="italic-note" hidden> · Mono与中文保持直立</span></p>
+				<noscript><p class="notice">字体试用需要少量JavaScript来确认字体已加载；你仍可阅读说明和下载字体</p></noscript>
+				<p id="global-status" class="notice" role="status" hidden></p>
+
+				<div class="comparison-head" aria-hidden="true"><span>字体家族</span><span>原版Noto</span><span>Sha1补丁</span></div>
+				<div class="comparison-row">
+					<h3>Sans<span>无衬线</span></h3>
+					<div class="specimen live-specimen" data-family="sans" data-kind="noto" data-live>
+						<span class="mobile-label">原版Noto</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+					<div class="specimen live-specimen" data-family="sans" data-kind="patch" data-live>
+						<span class="mobile-label">Sha1补丁</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+				</div>
+				<div class="comparison-row">
+					<h3>Mono<span>等宽拉丁</span></h3>
+					<div class="specimen live-specimen" data-family="mono" data-kind="noto" data-live>
+						<span class="mobile-label">原版Noto</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+					<div class="specimen live-specimen" data-family="mono" data-kind="patch" data-live>
+						<span class="mobile-label">Sha1补丁</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+				</div>
+				<div class="comparison-row">
+					<h3>Serif<span>衬线</span></h3>
+					<div class="specimen live-specimen" data-family="serif" data-kind="noto" data-live>
+						<span class="mobile-label">原版Noto</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+					<div class="specimen live-specimen" data-family="serif" data-kind="patch" data-live>
+						<span class="mobile-label">Sha1补丁</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div>
+					</div>
+				</div>
+			</section>
+
+			<section id="details" class="details-section" aria-labelledby="details-title">
+				<div class="section-heading">
+					<h2 id="details-title"><span class="section-number">02</span>改动很少，区别很清楚</h2>
+					<p>保留Noto的字形基础，把注意力放在容易看错的地方</p>
+				</div>
+				<article class="detail-row">
+					<div><h3>无歧义</h3><p>数字1有实心三角旗头，0使用点零，O有独立轮廓；满高竖线以圆点标识，帮助区分字母、数字与符号</p></div>
+					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text="I l 1 7 |   O 0"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="detail-row">
+					<div><h3>协调</h3><p>中文冒号、分号、叹号和问号使用空心圆点；调整视觉重量与位置，让中英文标点同处一行，也能分清</p></div>
+					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text=":： ;； !！ ?？"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+				<article class="detail-row">
+					<div><h3>易辨认</h3><p>中文括号收紧外侧空白并加入短横；调整连字符与省略号的高度，破折号加入圆点，不开启连字也能清楚阅读</p></div>
+					<div class="specimen detail-specimen" data-family="sans" data-kind="patch" data-text="（中文）(English) -> … —"><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+				</article>
+			</section>
+
+			<section id="get" class="get-section" aria-labelledby="get-title">
+				<div><p class="eyebrow">继续用熟悉的NOTO</p><h2 id="get-title">一份轻量补丁，<br>让细节清楚一点</h2></div>
+				<div class="get-copy"><p>已有Noto，选择Patch并与对应Noto家族搭配使用；希望直接安装，选择Complete</p><a class="download-link" href="https://github.com/Sha1rholder/sha1-fonts/releases/latest">获取字体<span aria-hidden="true">↗</span></a><p class="caption">本页使用Patch与按需加载的Noto字形子集</p></div>
+			</section>
+		</main>
+		<footer><span>Sha1字体 · 基于Noto</span><div><a href="https://github.com/Sha1rholder/sha1-fonts">源码与说明</a><a href="licenses/Sha1-OFL.txt">SIL OFL 1.1</a></div></footer>
+	</div>
+</body>
+</html>
