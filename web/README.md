@@ -26,6 +26,8 @@ uv run --project src python -m http.server 8766 --bind 127.0.0.1 --directory dis
 
 首次使用需在仓库Settings → Pages → Build and deployment中将Source设为GitHub Actions
 
+构建按分支和触发事件分别控制并发，同组的新构建会取消旧构建；推送与字体发布后的构建互不取消。部署单独排队，不取消正在进行的部署
+
 ## 字体加载
 
 - 部署时Patch来自GitHub latest release，本地预览可使用本地构建，不使用完整Sha1字体
