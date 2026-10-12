@@ -22,8 +22,10 @@ def check_intermediate(
 		for job in jobs
 	}
 	source = subset_font(
-		variable_path(config["source"], jobs[0]["italic"]), (0x31, 0x4F, 0x7C, 0x2014)
+		variable_path(config["source"], jobs[0]["italic"]),
+		(0x31, 0x3E, 0x4F, 0x7C, 0x2014, 0x2026),
 	)
+	cjk = subset_font(variable_path(config["cjk"]), (0x4E2D,))
 	count = 0
 	for low, high in pairwise(weights):
 		for narrow, wide in pairwise(widths):
@@ -73,11 +75,13 @@ def check_intermediate(
 				if 0x31 in best_cmap(instance):
 					latin.check_one(instance, base, jobs[0]["family"], position)
 				latin.check_em_dash(instance, base, position)
+				latin.check_ellipsis(instance, base, cjk, position)
 			instance.close()
 			count += 1
 	for master in masters.values():
 		master.close()
 	source.close()
+	cjk.close()
 	return count
 
 

@@ -75,6 +75,20 @@ def mark_em_dash(glyph):
 	glyph.foreground += geometry.circle((left + right) / 2, (bottom + top) / 2, radius)
 
 
+def fit_ellipsis(glyph, width):
+	"""保留三个圆点形状并在汉字字格的三个等分区域内居中"""
+	layer = glyph.foreground
+	for index, contour in enumerate(
+		sorted(layer, key=lambda contour: contour.boundingBox()[0])
+	):
+		left, _, right, _ = contour.boundingBox()
+		contour.transform(
+			(1, 0, 0, 1, width * (2 * index + 1) / 6 - (left + right) / 2, 0)
+		)
+	glyph.foreground = layer
+	glyph.width = width
+
+
 def trim_mono_l(glyph):
 	"""收回小写l的左下横脚并保留右侧横脚和原字宽"""
 	layer = glyph.foreground
@@ -191,9 +205,10 @@ def flag_one(glyph, angle, family):
 def patch_latin(target, base, cjk, quotes, job: BuildJob) -> None:
 	"""按家族选择拉丁补丁供体并执行对应修改"""
 	for codepoint in (0x2D, 0x2026):
-		transforms.align_middle(
-			transforms.copy_glyph(target, base, codepoint), base[0x3E]
-		)
+		glyph = transforms.copy_glyph(target, base, codepoint)
+		transforms.align_middle(glyph, base[0x3E])
+		if codepoint == 0x2026:
+			fit_ellipsis(glyph, cjk[job["punctuation_top_reference"]].width)
 	mark_bar(transforms.copy_glyph(target, base, 0x7C), base)
 	mark_em_dash(transforms.copy_glyph(target, base, 0x2014))
 	dot_zero(transforms.copy_glyph(target, base, 0x30), base[0x2E])

@@ -34,6 +34,7 @@ def check_instance(
 		else instance
 	)
 	latin.check_middle_alignment(instance, base, position)
+	latin.check_ellipsis(instance, base, cjk, position)
 	if not job["italic"]:
 		punctuation.check_punctuation(instance, cjk, position)
 		punctuation.check_shifted_cjk_punctuation(instance, cjk, position)

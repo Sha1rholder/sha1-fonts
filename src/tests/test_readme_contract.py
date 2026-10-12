@@ -12,13 +12,20 @@ from fontTools.varLib.instancer import instantiateVariableFont
 from lib import FAMILIES, font_path, italic_styles, subset_font, variable_path
 from verification.custom import check_o
 from verification.geometry import best_cmap, bounds, contour_glyph
-from verification.latin import check_bar, check_em_dash, check_one, check_zero
+from verification.latin import (
+	check_bar,
+	check_ellipsis,
+	check_em_dash,
+	check_middle_alignment,
+	check_one,
+	check_zero,
+)
 
 
 def regular_instance(path):
 	"""只提取字形回归所需字符并实例化常规字重"""
 	with subset_font(
-		path, (0x2D, 0x2E, 0x30, 0x31, 0x4F, 0x6C, 0x7C, 0x2014, 0x2026)
+		path, (0x2D, 0x2E, 0x30, 0x31, 0x3E, 0x4F, 0x6C, 0x7C, 0x2014, 0x2026)
 	) as font:
 		return instantiateVariableFont(font, {"wght": 400, "wdth": 100}, inplace=False)
 
@@ -33,6 +40,55 @@ def replace_glyph(target, source, codepoint):
 
 class ReadmeContractTests(unittest.TestCase):
 	"""覆盖艺术字O、点零、Mono底横和破折号的几何约束"""
+
+	def test_ellipses_use_cjk_width_all_styles(self):
+		"""五个样式的省略号使用汉字步进且保留垂直对齐与圆点形状"""
+		for key, config in FAMILIES.items():
+			for italic in italic_styles(key):
+				with (
+					self.subTest(family=key, italic=italic),
+					regular_instance(font_path(config, italic)) as patch,
+					regular_instance(variable_path(config["source"], italic)) as base,
+					subset_font(variable_path(config["cjk"]), (0x4E2D,)) as cjk,
+				):
+					check_middle_alignment(patch, base, "regular")
+					check_ellipsis(patch, base, cjk, "regular")
+
+	def test_ellipsis_rejects_original_advance(self):
+		"""拒绝省略号沿用拉丁步进或随字宽轴缩小"""
+		for key, config in FAMILIES.items():
+			with (
+				self.subTest(family=key),
+				regular_instance(font_path(config)) as patch,
+				regular_instance(variable_path(config["source"])) as base,
+				subset_font(variable_path(config["cjk"]), (0x4E2D,)) as cjk,
+			):
+				name = best_cmap(patch)[0x2026]
+				patch["hmtx"][name] = (
+					base["hmtx"][best_cmap(base)[0x2026]][0],
+					patch["hmtx"][name][1],
+				)
+				with self.assertRaisesRegex(AssertionError, "Ellipsis CJK advance"):
+					check_ellipsis(patch, base, cjk, "original advance")
+
+	def test_ellipsis_rejects_changed_dots(self):
+		"""拒绝水平拉伸圆点或破坏三个圆点的布局"""
+		for change in ("stretch", "shift"):
+			with (
+				self.subTest(change=change),
+				regular_instance(font_path(FAMILIES["mono"])) as patch,
+				regular_instance(variable_path("Noto_Sans_Mono")) as base,
+				subset_font(variable_path("Noto_Sans_SC"), (0x4E2D,)) as cjk,
+			):
+				glyph = patch["glyf"][best_cmap(patch)[0x2026]]
+				for index in range(glyph.endPtsOfContours[0] + 1):
+					x, y = glyph.coordinates[index]
+					glyph.coordinates[index] = (
+						x * 1.2 if change == "stretch" else x + 20,
+						y,
+					)
+				with self.assertRaises(AssertionError):
+					check_ellipsis(patch, base, cjk, change)
 
 	def test_artistic_o_all_styles(self):
 		"""五个发布样式均应具有原生圆环、开口及连续斜笔"""

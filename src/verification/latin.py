@@ -5,6 +5,7 @@ from array import array
 from copy import deepcopy
 
 from fontTools.pens.areaPen import AreaPen
+from fontTools.pens.boundsPen import BoundsPen
 from fontTools.ttLib.tables._g_l_y_f import GlyphCoordinates
 
 from lib import QUOTES
@@ -238,7 +239,7 @@ def check_one(font, base, family, position):
 def check_mono_letters(font, base, position):
 	"""核对等宽步进且小写l仅删除左下横脚"""
 	width = base["hmtx"][best_cmap(base)[0x31]][0]
-	for cp in (0x2D, 0x30, 0x31, 0x4F, 0x6C, 0x7C, 0x2026, *QUOTES):
+	for cp in (0x2D, 0x30, 0x31, 0x4F, 0x6C, 0x7C, *QUOTES):
 		if cp not in best_cmap(font):
 			continue
 		require(
@@ -369,7 +370,7 @@ def check_em_dash(font, base, position):
 
 
 def check_middle_alignment(font, base, position):
-	"""核对连字符和省略号仅平移到大于号的垂直中心"""
+	"""核对连字符和省略号对齐大于号且连字符保留形状和步进"""
 	cmap = best_cmap(font)
 	for codepoint in (0x2D, 0x2026):
 		if codepoint not in cmap:
@@ -383,6 +384,8 @@ def check_middle_alignment(font, base, position):
 			abs(box[1] + box[3] - reference[1] - reference[3]) / 2 <= 1.1,
 			f"Middle alignment: {position} {codepoint:04X}",
 		)
+		if codepoint == 0x2026:
+			continue
 		require(
 			abs(box[0] - source[0]) <= 1.1
 			and abs(box[2] - source[2]) <= 1.1
@@ -393,6 +396,61 @@ def check_middle_alignment(font, base, position):
 			font["hmtx"][cmap[codepoint]][0]
 			== base["hmtx"][best_cmap(base)[codepoint]][0],
 			f"Shifted symbol advance: {position}",
+		)
+
+
+def check_ellipsis(font, base, cjk, position):
+	"""独立核对省略号的汉字步进、三等分布局和原生圆点轮廓"""
+	cp = 0x2026
+	glyph = font["glyf"][best_cmap(font)[cp]]
+	source = deepcopy(base["glyf"][best_cmap(base)[cp]])
+	# Sans与Mono的原生省略号由句点引用组成，展开后逐个核验
+	source.coordinates, source.endPtsOfContours, source.flags = source.getCoordinates(
+		base["glyf"]
+	)
+	source.numberOfContours = len(source.endPtsOfContours)
+	width = cjk["hmtx"][best_cmap(cjk)[0x4E2D]][0]
+	require(
+		font["hmtx"][best_cmap(font)[cp]][0] == width,
+		f"Ellipsis CJK advance: {position}",
+	)
+	require(
+		glyph.numberOfContours == source.numberOfContours == 3,
+		f"Ellipsis dot count: {position}",
+	)
+	source_box, reference = bounds(base, cp), bounds(base, 0x3E)
+	box = bounds(font, cp)
+	require(
+		abs(box[1] + box[3] - reference[1] - reference[3]) / 2 <= 1.1,
+		f"Ellipsis middle alignment: {position}",
+	)
+	offset_y = (reference[1] + reference[3] - source_box[1] - source_box[3]) / 2
+	actual_dots, source_dots = (
+		sorted(
+			(contour_glyph(outline, index) for index in range(3)),
+			key=lambda contour: contour_bounds(contour, 0)[0],
+		)
+		for outline in (glyph, source)
+	)
+	for index, (actual, original) in enumerate(zip(actual_dots, source_dots)):
+		# 使用实际曲线边界，避免Italic控制点超出轮廓时误判圆心
+		pen = BoundsPen(None)
+		original.draw(pen, None)
+		assert pen.bounds is not None
+		left, _, right, _ = pen.bounds
+		center = width * (2 * index + 1) / 6
+		offset_x = center - (left + right) / 2
+		original.coordinates = GlyphCoordinates(
+			[(x + offset_x, y + offset_y) for x, y in original.coordinates]
+		)
+		check_source_contour(actual, original)
+		pen = BoundsPen(None)
+		actual.draw(pen, None)
+		assert pen.bounds is not None
+		left, _, right, _ = pen.bounds
+		require(
+			abs((left + right) / 2 - center) <= 1.1 and 0 <= left < right <= width,
+			f"Ellipsis dot placement: {position}",
 		)
 
 

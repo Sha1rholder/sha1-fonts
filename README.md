@@ -45,7 +45,7 @@ Sha1 Sans = Sha1 Sans Patch + Noto Sans + Noto Sans SC
 - `0`: Noto Sans改点零
 - `O`: 自定义艺术字体
 - `-`: Noto Sans上移到和Noto Sans的`>`中间持平
-- `…`: Noto Sans上移到和Noto Sans的`>`中间持平
+- `…`: Noto Sans上移到和Noto Sans的`>`中间持平，与单个汉字同宽
 
 ## Sha1 Sans Mono
 
@@ -64,7 +64,7 @@ Sha1 Sans Mono = Sha1 Sans Mono Patch + Noto Sans Mono + Noto Sans SC
 - `0`: Noto Sans Mono改点零
 - `O`: 自定义艺术字体
 - `-`: Noto Sans Mono上移到和Noto Sans Mono的`>`中间持平
-- `…`: Noto Sans Mono上移到和Noto Sans Mono的`>`中间持平
+- `…`: Noto Sans Mono上移到和Noto Sans Mono的`>`中间持平，与单个汉字同宽
 
 ## Sha1 Serif
 
@@ -81,7 +81,7 @@ Sha1 Serif = Sha1 Serif Patch + Noto Serif + Noto Serif SC
 - `0`: Noto Serif改点零
 - `O`: 自定义艺术字体
 - `-`: Noto Serif上移到和Noto Serif的`>`中间持平
-- `…`: Noto Serif上移到和Noto Serif的`>`中间持平
+- `…`: Noto Serif上移到和Noto Serif的`>`中间持平，与单个汉字同宽
 
 # 许可证与来源
 
