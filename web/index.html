@@ -38,9 +38,11 @@
 		<main>
 			<section class="hero" aria-labelledby="title">
 				<div>
-					<p class="eyebrow">NOTO基础 · SHA1补丁</p>
-					<h1 id="title">中英混排，<br>清楚相处</h1>
-					<p class="intro">延续Noto系列的设计原则，让代码里的符号和文稿里的标点各自清楚，也彼此协调</p>
+					<hgroup>
+						<h1 id="title">Sha1 Fonts Series</h1>
+						<p class="hero-subtitle">Sha1 Sans / Sha1 Sans Mono / Sha1 Serif</p>
+					</hgroup>
+					<p class="intro">延续Noto系列的设计原则，<wbr>让代码里的符号和文稿里的标点清晰协调</p>
 					<p class="principles">无歧义<span aria-hidden="true">／</span>协调<span aria-hidden="true">／</span>易辨认</p>
 				</div>
 				<div class="hero-proof">
@@ -48,14 +50,13 @@
 						<p class="load-status" role="status">正在准备字体…</p>
 						<div class="font-sample hero-glyphs" hidden></div>
 					</div>
-					<p class="caption">字母、数字与符号，各有自己的轮廓</p>
 				</div>
 			</section>
 
 			<section id="programming" class="scene-section" aria-labelledby="programming-title">
 				<div class="section-heading">
 					<h2 id="programming-title"><span class="section-number">01</span>编程：看清字符，读顺结构</h2>
-					<p>Sha1 Mono对照Noto Sans Mono＋Noto Sans SC</p>
+					<p>Sha1 Sans Mono对照Noto Sans Mono＋Noto Sans SC</p>
 				</div>
 				<p class="scene-intro">标识符、运算符和中文注释经常挤在同一行里。保留Noto的等宽节奏，只在易混淆的轮廓与符号的位置上做调整，让每个字符都能被准确读出</p>
 				<p class="scene-note">两侧使用相同的文字、字号与字重，所有样本均关闭连字</p>
@@ -63,32 +64,32 @@
 				<article class="scene-example">
 					<div class="example-copy"><h3><code>-&gt;</code>，两笔也能对齐</h3><p>把连字符抬到<code>&gt;</code>的中线，两笔在垂直方向上对齐。函数的返回类型、注释中的流程，都能保持顺畅的视觉走向，无需连字</p></div>
 					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="fn read() -&gt; String&#10;// 文件 -&gt; 文本 -&gt; 字符"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="fn read() -&gt; String&#10;// 文件 -&gt; 文本 -&gt; 字符"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="fn read() -&gt; String&#10;// 文件 -&gt; 文本 -&gt; 字符"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 				<article class="scene-example">
 					<div class="example-copy"><h3>订单号里的<code>O</code>与<code>0</code></h3><p>字母O使用独立轮廓，数字0使用点零。复制订单号、读端口号或排查日志时，轮廓和中间的点一起给出辨认依据</p></div>
 					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="orderID = &quot;O0O0&quot;;&#10;retry = 0; // 第0次重试"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="orderID = &quot;O0O0&quot;;&#10;retry = 0; // 第0次重试"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="orderID = &quot;O0O0&quot;;&#10;retry = 0; // 第0次重试"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 				<article class="scene-example">
 					<div class="example-copy"><h3>参数的<code>-</code>，注释的<code>—</code></h3><p>连字符保持短横，破折号在中间加入实心小圆点。命令参数与自然语言里的停顿，即使出现在同一段代码里，也有不同的视觉标记</p></div>
 					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="tool -n  # 预演&#10;# 预演—不会写入文件"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="tool -n  # 预演&#10;# 预演—不会写入文件"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="tool -n  # 预演&#10;# 预演—不会写入文件"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 				<article class="scene-example punctuation-example">
 					<div class="example-copy"><h3>全角，还是半角＋空格？</h3><p><strong>空白相近，字符不同</strong>。全角冒号、分号、叹号与问号使用空心圆点，逗号调整重量和位置，全角括号加入短横。从字形辨认标点，减少把中文符号误当代码语法的机会</p><p class="example-note">每组上行在句中半角标点后加空格，下行使用全角标点且没有额外空格；下方的全角调用不能直接作为代码执行</p></div>
 					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="键: 值; 重试? 是!&#10;键：值；重试？是！&#10;call(a, b)&#10;call（a，b）"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="键: 值; 重试? 是!&#10;键：值；重试？是！&#10;call(a, b)&#10;call（a，b）"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="键: 值; 重试? 是!&#10;键：值；重试？是！&#10;call(a, b)&#10;call（a，b）"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 				<article class="scene-example">
 					<div class="example-copy"><h3>逐字读出<code>I l 1 7</code></h3><p>I保留上下横梁，l去掉左下横，1加入实心三角旗头，7保留斜笔。相似字符各有线索，标识符与数组下标也更容易逐字核对</p></div>
 					<div class="specimen code-specimen" data-family="mono" data-kind="noto" data-text="let Il17 = [1, 7];&#10;index = Il17[1];"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="let Il17 = [1, 7];&#10;index = Il17[1];"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen" data-family="mono" data-kind="patch" data-text="let Il17 = [1, 7];&#10;index = Il17[1];"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 				<article class="scene-example">
 					<div class="example-copy"><h3>让上下两行的<code>|</code>接起来</h3><p>竖线延伸至字体的完整高度，中间的小圆点标识它是符号。在紧凑行距下，同一列的竖线上下相接，终端输出的层次能连贯地读下去</p><p class="example-note">这组使用相同的紧凑行距；连接观感随编辑器行距而变化</p></div>
 					<div class="specimen code-specimen pipe-specimen" data-family="mono" data-kind="noto" data-text="  | 读取配置&#10;  | 校验字段&#10;  | 写入结果"><span class="sample-label">Noto Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
-					<div class="specimen code-specimen pipe-specimen" data-family="mono" data-kind="patch" data-text="  | 读取配置&#10;  | 校验字段&#10;  | 写入结果"><span class="sample-label">Sha1 Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
+					<div class="specimen code-specimen pipe-specimen" data-family="mono" data-kind="patch" data-text="  | 读取配置&#10;  | 校验字段&#10;  | 写入结果"><span class="sample-label">Sha1 Sans Mono</span><p class="load-status" role="status">正在准备字体…</p><div class="font-sample" hidden></div></div>
 				</article>
 			</section>
 
