@@ -37,6 +37,8 @@ jobs:
     concurrency:
       group: pages-build-${{ github.ref }}-${{ github.event_name }}
       cancel-in-progress: true
+    outputs:
+      artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Check out sources and LFS fonts
         uses: actions/checkout@v7
@@ -83,6 +85,7 @@ jobs:
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
         uses: actions/upload-pages-artifact@v5
         with:
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
           path: dist
 
   deploy:
@@ -103,3 +106,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact_name }}
