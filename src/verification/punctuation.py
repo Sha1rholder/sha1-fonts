@@ -18,13 +18,19 @@ from .geometry import (
 
 
 def check_punctuation(font, cjk, position):
-	"""核对实心部分加粗并齐平汉字上界且空心圆保持不变"""
+	"""核对加粗、顶线以及与逗号点头同宽的空心圆"""
 	period = cjk["glyf"][best_cmap(cjk)[0x3002]]
 	period_boxes = sorted(
 		(contour_bounds(period, index) for index in range(period.numberOfContours)),
 		key=lambda box: box[2] - box[0],
 		reverse=True,
 	)
+	comma = font["glyf"][best_cmap(font)[0xFF0C]]
+	_, bottom, _, top = bounds(font, 0xFF0C)
+	head_x = [x for x, y in comma.coordinates if y >= (bottom + top) / 2]
+	diameter = max(head_x) - min(head_x)
+	period_outer = period_boxes[0]
+	ring_scale = diameter / (period_outer[2] - period_outer[0])
 	for cp in (0xFF01, 0xFF0C, 0xFF1A, 0xFF1B, 0xFF1F):
 		glyph = font["glyf"][best_cmap(font)[cp]]
 		source = cjk["glyf"][best_cmap(cjk)[cp]]
@@ -120,15 +126,15 @@ def check_punctuation(font, cjk, position):
 			)
 			for actual_box, period_box in zip((outer, inner), period_boxes):
 				for axis in (0, 1):
+					# 逗号两侧及圆环两侧各自取整，比例换算后容许1.5单位误差
 					require(
 						abs(
 							actual_box[axis + 2]
 							- actual_box[axis]
-							- period_box[axis + 2]
-							+ period_box[axis]
+							- (period_box[axis + 2] - period_box[axis]) * ring_scale
 						)
-						<= 1.1,
-						f"SC period size: {position} {cp:04X}",
+						<= 1.5,
+						f"Comma-sized punctuation ring: {position} {cp:04X}",
 					)
 			require(
 				not ink_at(font, cp, center_x, center_y),

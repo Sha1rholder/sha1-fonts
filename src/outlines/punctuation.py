@@ -8,7 +8,7 @@ from lib import BuildJob
 from . import geometry, transforms
 
 
-def patch_punctuation(glyph, period, stem_top=None, dot_shift=0):
+def patch_punctuation(glyph, period, stem_top=None, dot_shift=0, ring_diameter=None):
 	"""按句号线宽加粗实心部分并将主体对齐汉字上界"""
 	period_boxes = sorted(
 		(contour.boundingBox() for contour in period.foreground),
@@ -16,6 +16,7 @@ def patch_punctuation(glyph, period, stem_top=None, dot_shift=0):
 		reverse=True,
 	)
 	outer, inner = period_boxes
+	ring_scale = ring_diameter / (outer[2] - outer[0]) if ring_diameter else 1
 	stroke = (
 		sum(
 			outer[axis + 2] - outer[axis] - inner[axis + 2] + inner[axis]
@@ -62,7 +63,14 @@ def patch_punctuation(glyph, period, stem_top=None, dot_shift=0):
 		for box, clockwise in ((outer, True), (inner, False)):
 			ring = geometry.circle(0, 0, 1, clockwise=clockwise)
 			ring.transform(
-				((box[2] - box[0]) / 2, 0, 0, (box[3] - box[1]) / 2, center_x, center_y)
+				(
+					(box[2] - box[0]) * ring_scale / 2,
+					0,
+					0,
+					(box[3] - box[1]) * ring_scale / 2,
+					center_x,
+					center_y,
+				)
 			)
 			layer += ring
 	glyph.foreground = layer
@@ -97,7 +105,18 @@ def mark_parenthesis(glyph, left_side):
 
 def patch_cjk(target, cjk, job: BuildJob) -> None:
 	"""按任务参数处理中文标点和括号"""
-	for codepoint in (0xFF01, 0xFF0C, 0xFF1A, 0xFF1B, 0xFF1F):
+	comma = transforms.copy_glyph(target, cjk, 0xFF0C)
+	patch_punctuation(comma, cjk[0x3002])
+	_, bottom, _, top = comma.boundingBox()
+	head_x = [
+		point.x
+		for contour in comma.foreground
+		for point in contour
+		if point.y >= (bottom + top) / 2
+	]
+	ring_diameter = max(head_x) - min(head_x)
+	shift_punctuation_right(comma, job["punctuation_right_shift_fraction"])
+	for codepoint in (0xFF01, 0xFF1A, 0xFF1B, 0xFF1F):
 		stem_top = (
 			cjk[job["punctuation_top_reference"]].boundingBox()[3]
 			if codepoint in (0xFF01, 0xFF1F)
@@ -110,6 +129,7 @@ def patch_cjk(target, cjk, job: BuildJob) -> None:
 			cjk[0x3002],
 			stem_top=stem_top,
 			dot_shift=shift_dot,
+			ring_diameter=ring_diameter,
 		)
 		shift_punctuation_right(glyph, job["punctuation_right_shift_fraction"])
 	for codepoint in (0x3001, 0x3002):

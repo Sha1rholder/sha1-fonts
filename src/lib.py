@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import NotRequired, TypedDict
 
 EPOCH = 3856896000
-OUTLINE_DESIGN_VERSION = 9
+OUTLINE_DESIGN_VERSION = 10
 WEIGHTS = {
 	100: "Thin",
 	200: "ExtraLight",
